@@ -1,7 +1,7 @@
 // const Cookies = require('js-cookie');
 
 /*
- * Configuration values needed in js codes
+ * Configuration values needed in js code
  *
  * NOTE:
  * Please use the following command to avoid accidentally committing personal changes
