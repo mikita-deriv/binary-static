@@ -33,13 +33,13 @@ const Cashier = (() => {
         showCashierNote();
     };
 
+
+
     const showCashierNote = () => {
         // TODO: remove `wait` & residence check to release to all countries
         BinarySocket.wait('authorize').then(() => {
             $('.cashier_note').setVisibility(
-                Client.isLoggedIn() &&                          // only show to logged-in clients
-                !Client.get('is_virtual') &&                    // only show to real accounts
-                !Currency.isCryptocurrency(Client.get('currency'))       // only show to fiat currencies
+                Client.isLoggedIn()                         // only show to logged-in clients
             );
         });
     };
