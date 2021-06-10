@@ -33,8 +33,6 @@ const Cashier = (() => {
         showCashierNote();
     };
 
-
-
     const showCashierNote = () => {
         // TODO: remove `wait` & residence check to release to all countries
         BinarySocket.wait('authorize').then(() => {
