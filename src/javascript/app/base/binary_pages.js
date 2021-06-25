@@ -155,7 +155,7 @@ const pages_config = {
     'open-source-projects'   : { module: StaticPages.OpenSourceProjects },
     'payment-agent'          : { module: StaticPages.PaymentAgent },
     'responsible-trading'    : { module: ResponsibleTrading },
-    'set-currency'           : { module: SetCurrency,                is_authenticated: true, only_real: true, needs_currency: true },
+    'SetCurrency'            : { module: SetCurrency,                is_authenticated: true, only_real: true, needs_currency: true },
     'telegram-bot'           : { module: TelegramBot,                is_authenticated: true },
     'terms-and-conditions'   : { module: TermsAndConditions },
     'types-of-accounts'      : { module: TypesOfAccounts },

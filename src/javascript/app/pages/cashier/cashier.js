@@ -8,6 +8,10 @@ const localize         = require('../../../_common/localize').localize;
 const State            = require('../../../_common/storage').State;
 const Url              = require('../../../_common/url');
 const getPropertyValue = require('../../../_common/utility').getPropertyValue;
+const Dialog           = require('../../common/attach_dom/dialog');
+const BinaryPjax       = require('../../base/binary_pjax');
+const Accounts         = require('../user/accounts');
+const Header           = require('../../base/header');
 
 const Cashier = (() => {
     let href = '';
@@ -19,7 +23,7 @@ const Cashier = (() => {
         let $toggler;
         if (anchor) {
             $toggler = $(`[data-anchor='${anchor}']`);
-            $toggler.find('.td-description').addClass('active'); // toggle open description
+            $toggler.find('.td-descriptioncashier_iframe').addClass('active'); // toggle open description
             $toggler.find('.td-list').removeClass('active');
             $toggler.find('.toggler').addClass('open');
         }
@@ -195,10 +199,6 @@ const Cashier = (() => {
         });
     };
 
-    const checkStatusIsLocked = ({ status }) => {
-        applyStateLockLogic(status, '.deposit_btn_cashier', '.withdraw_btn_cashier');
-    };
-
     const checkLockStatusPA = () => {
         BinarySocket.wait('get_account_status').then(() => {
             const { status } = State.getResponse('get_account_status');
@@ -214,7 +214,6 @@ const Cashier = (() => {
         if (Client.isLoggedIn()) {
             BinarySocket.send({ statement: 1, limit: 1 });
             BinarySocket.wait('authorize', 'mt5_login_list', 'statement', 'get_account_status', 'landing_company').then(() => {
-                checkStatusIsLocked(State.getResponse('get_account_status'));
                 const residence  = Client.get('residence');
                 const currency   = Client.get('currency');
                 if (is_virtual) {
@@ -244,14 +243,38 @@ const Cashier = (() => {
                         }
                     });
                 }
-
-                if (Currency.isCryptocurrency(currency)) {
+           
+                if (Currency.isCryptocurrency(currency) || Client.get('is_virtual')) {
                     $('.crypto_currency').setVisibility(1);
-
+                    const fiat_account = Client.hasCurrencyType('fiat');
+                    // const all_currencies = Client.getAllLoginids().map((loginid) => Client.get('currency', loginid));  //need for future logic
+                    const account_cryptocurrency = Currency.isCryptocurrency(currency);
+                    const openDepositPage = () => {
+                        Header.switchLoginid(fiat_account); //  this works and I switch to another account
+                        BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`); // still in Progress, want to open deposit page in Real Money account
+                    };
+                    $('.deposit_btn_cashier').on('click', ()=>{
+                        BinarySocket.send({ authorize: 1 }).then(() => {
+                            if (account_cryptocurrency  && fiat_account || is_virtual && fiat_account){
+                                Dialog.confirm({
+                                    id               : 'deposit_currency_change_popup_container',
+                                    ok_text          : localize('Switch accounts'),
+                                    cancel_text      : localize('Cancel'),
+                                    localized_title  : localize('Switch accounts?'),
+                                    localized_message: localize('To deposit money, please switch to your account.'),
+                                    onConfirm        : () => openDepositPage(),
+                                    onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
+                                });
+                            } else {
+                                Accounts.showCurrencyPopUp('create', true);
+                            }
+                        });
+                    });
                     const previous_href = $('#view_payment_methods').attr('href');
                     $('#view_payment_methods').attr('href', previous_href.concat('?anchor=cryptocurrency'));
                 } else {
                     $('.normal_currency').setVisibility(1);
+                    $('#REAL_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
                 }
             });
         }

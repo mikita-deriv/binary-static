@@ -475,6 +475,8 @@ const Header = (() => {
         hideNotification,
         displayAccountStatus,
         loginOnClick,
+        switchLoginid,
+        loginIDOnClick,
     };
 })();
 

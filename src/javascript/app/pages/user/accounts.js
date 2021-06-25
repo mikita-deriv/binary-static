@@ -147,14 +147,14 @@ const Accounts = (() => {
         change: 'change_currency',
     };
 
-    const showCurrencyPopUp = (action) => {
+    const showCurrencyPopUp = (action, isCashier) => {
         showPopup({
             url               : urlFor('user/set-currency'),
             content_id        : '#set_currency',
             form_id           : 'frm_set_currency',
             additionalFunction: () => {
                 localStorage.setItem('popup_action', action_map[action]);
-                SetCurrency.onLoad(onConfirmSetCurrency);
+                SetCurrency.onLoad(onConfirmSetCurrency, isCashier);
             },
         });
     };
@@ -274,6 +274,8 @@ const Accounts = (() => {
     return {
         onLoad,
         onUnload,
+        showCurrencyPopUp,
+        populateMultiAccount,
     };
 })();
 
