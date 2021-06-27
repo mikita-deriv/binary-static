@@ -243,17 +243,15 @@ const Cashier = (() => {
                         }
                     });
                 }
-           
-                if (Currency.isCryptocurrency(currency) || Client.get('is_virtual')) {
+
+                const fiat_account = Client.hasCurrencyType('fiat');
+                const crypto_account = Client.hasCurrencyType('crypto');
+                const account_cryptocurrency = Currency.isCryptocurrency(currency);
+                const is_virtual_account = Client.get('is_virtual');
+                if (account_cryptocurrency || is_virtual_account) {
                     $('.crypto_currency').setVisibility(1);
-                    const fiat_account = Client.hasCurrencyType('fiat');
-                    // const all_currencies = Client.getAllLoginids().map((loginid) => Client.get('currency', loginid));  //need for future logic
-                    const account_cryptocurrency = Currency.isCryptocurrency(currency);
-                    const openDepositPage = () => {
-                        Header.switchLoginid(fiat_account); //  this works and I switch to another account
-                        BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`); // still in Progress, want to open deposit page in Real Money account
-                    };
-                    $('.deposit_btn_cashier').on('click', ()=>{
+                    $('#PAYMENTMETHODS_topup_link').on('click', ()=>{
+                        BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`);
                         BinarySocket.send({ authorize: 1 }).then(() => {
                             if (account_cryptocurrency  && fiat_account || is_virtual && fiat_account){
                                 Dialog.confirm({
@@ -262,7 +260,7 @@ const Cashier = (() => {
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch accounts?'),
                                     localized_message: localize('To deposit money, please switch to your account.'),
-                                    onConfirm        : () => openDepositPage(),
+                                    onConfirm        : () => Header.switchLoginid(fiat_account),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
                                 });
                             } else {
@@ -274,7 +272,23 @@ const Cashier = (() => {
                     $('#view_payment_methods').attr('href', previous_href.concat('?anchor=cryptocurrency'));
                 } else {
                     $('.normal_currency').setVisibility(1);
-                    $('#REAL_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+                    $('#PAYMENTMETHODS_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+                }
+                if (is_virtual_account || !account_cryptocurrency){
+                    $('#CRYPTOMETHOD_topup_link').on('click', ()=>{
+                        BinarySocket.send({ authorize: 1 }).then(() => {
+                            if (!account_cryptocurrency  && crypto_account || is_virtual && crypto_account){
+                                Dialog.confirm({
+                                    id               : 'deposit_currency_change_popup_container',
+                                    ok_text          : localize('Switch to crypto account?'),
+                                    cancel_text      : localize('Cancel'),
+                                    localized_title  : localize('Switch accounts?'),
+                                    localized_message: localize('To deposit cryptocurrency, switch your account.'),
+                                    onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
+                                });
+                            }
+                        });
+                    });
                 }
             });
         }
