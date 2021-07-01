@@ -112,7 +112,7 @@ const Header = (() => {
         }
     };
 
-    const switchLoginid = (loginid) => {
+    const switchLoginid = (loginid, reload_deposit) => {
         if (!loginid || loginid.length === 0) return;
         const token = Client.get('token', loginid);
         if (!token || token.length === 0) {
@@ -125,7 +125,12 @@ const Header = (() => {
         GTM.setLoginFlag('account_switch');
         Client.set('loginid', loginid);
         SocketCache.clear();
-        window.location.reload();
+
+        if (reload_deposit) {
+            window.location.href = `${Url.urlFor('cashier/forwardws')}?action=deposit`; 
+        } else {
+            window.location.reload();
+        }
     };
 
     const upgradeMessageVisibility = () => {

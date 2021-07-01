@@ -65,6 +65,7 @@ const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) =
                     <div className='gr-adapt client_real client_virtual invisible'>
                         <Button
                             className='toggle button client_real client_virtual invisible withdraw_btn_cashier'
+                            id='CRYPTOMETHOD_withdraw_topup_link'
                             href={it.url_for('/cashier/forwardws?action=withdraw')}
                             text={it.L('Withdraw')}
                             text_className='withdraw'
@@ -85,6 +86,7 @@ const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) =
                     <div className='gr-adapt client_real client_virtual invisible'>
                         <Button
                             className='toggle button client_real client_virtual invisible withdraw_btn_cashier'
+                            id='PAYMENTMETHOD_withdraw_topup_link'
                             href={it.url_for('/paymentagent/withdrawws')}
                             text={it.L('Withdraw')}
                             text_className='withdraw'
@@ -142,9 +144,9 @@ const Cashier = () => (
 
         <div className='gr-padding-10 client_virtual invisible' />
 
-        <div className='gr-padding-10 table-body'>
+        <div className='gr-padding-10 table-body normal_currency'>
             <h3 className='gr-padding-10'>
-                <span className='invisible normal_currency client_logged_out crypto_currency client_virtual'>{it.L('Deposit via bank wire, credit card, and e-wallet')}</span>
+                <span className='client_logged_out client_virtual'>{it.L('Deposit via bank wire, credit card, and e-wallet')}</span>
             </h3>
             <div className='gr-row'>
                 <IconWithLink
@@ -154,9 +156,9 @@ const Cashier = () => (
                     img_src={it.url_for('images/pages/cashier/payment-methods.svg')}
                 />
                 <div className='gr-6 gr-8-m'>
-                    <span className='invisible normal_currency crypto_currency client_virtual client_logged_out'>{it.L('Deposit via bank wire, credit card, and e-wallet.')}</span>
+                    <span className='client_virtual client_logged_out'>{it.L('Deposit via bank wire, credit card, and e-wallet.')}</span>
                     &nbsp;
-                    <a className='invisible normal_currency crypto_currency client_virtual' href={`${it.url_for('cashier/payment_methods')}`} id='view_payment_methods'>
+                    <a className='client_virtual' href={`${it.url_for('cashier/payment_methods')}`} id='view_payment_methods'>
                         <span>{it.L('View available payment methods')}</span>
                     </a>
                     <CashierNote className='gr-hide-m gr-child' text={it.L('Please do not share your bank account, credit card, or e-wallet with another client, as this may cause delays in your withdrawals.')} />
@@ -166,23 +168,23 @@ const Cashier = () => (
             </div>
         </div>
 
-        <div className='gr-padding-10 table-body'>
+        <div className='gr-padding-10 table-body crypto_currency'>
             <h3 className='gr-padding-10'>
-                <span className='invisible normal_currency client_logged_out crypto_currency'>{it.L('Deposit cryptocurrencies')}</span>
+                <span className='client_logged_out'>{it.L('Deposit cryptocurrencies')}</span>
             </h3>
             <div className='gr-row'>
                 <IconWithLink
                     img_src={it.url_for('images/pages/cashier/cryptocurrencies.svg')}
                 />
                 <div className='gr-6 gr-8-m'>
-                    <span className='invisible normal_currency client_logged_out crypto_currency'>{it.L('We accept the following cryptocurrencies:')}</span>
+                    <span className='client_logged_out'>{it.L('We accept the following cryptocurrencies:')}</span>
                 &nbsp;
                     <div className='crypto_container'>
-                        <img className='invisible normal_currency client_logged_out crypto_currency' src={it.url_for('images/pages/cashier/bitcoin-icon.svg')} alt='bitcoin-icon_logo' />
-                        <img className='invisible normal_currency client_logged_out crypto_currency' src={it.url_for('images/pages/cashier/ethereum-icon.svg')} alt='ethereum-icon_logo' />
-                        <img className='invisible normal_currency client_logged_out crypto_currency' src={it.url_for('images/pages/cashier/litecoin-icon.svg')} alt='litecoin-icon_logo' />
-                        <img className='invisible normal_currency client_logged_out crypto_currency' src={it.url_for('images/pages/cashier/usdc-icon.svg')} alt='usdc-icon_logo' />
-                        <img className='invisible normal_currency client_logged_out crypto_currency' src={it.url_for('images/pages/cashier/usdt-tether-icon.svg')} alt='usdt-tether_logo' />
+                        <img className='client_logged_out' src={it.url_for('images/pages/cashier/bitcoin-icon.svg')} alt='bitcoin-icon_logo' />
+                        <img className='client_logged_out' src={it.url_for('images/pages/cashier/ethereum-icon.svg')} alt='ethereum-icon_logo' />
+                        <img className='client_logged_out' src={it.url_for('images/pages/cashier/litecoin-icon.svg')} alt='litecoin-icon_logo' />
+                        <img className='client_logged_out' src={it.url_for('images/pages/cashier/usdc-icon.svg')} alt='usdc-icon_logo' />
+                        <img className='client_logged_out' src={it.url_for('images/pages/cashier/usdt-tether-icon.svg')} alt='usdt-tether_logo' />
                     </div>
                 </div>
                 <DepositWithdrawButtonCryptocurrencies is_cryptocurrencies_method />
@@ -191,9 +193,9 @@ const Cashier = () => (
 
         <div className='gr-padding-10' />
 
-        <div className='gr-padding-10 table-body' id='payment-agent-section'>
+        <div className='gr-padding-10 table-body crypto_currency' id='payment-agent-section'>
             <h3 className='gr-padding-10'>
-                <span className='invisible normal_currency client_logged_out crypto_currency'>{it.L('Desposit via payment agents')}</span>
+                <span className='client_logged_out'>{it.L('Desposit via payment agents')}</span>
             </h3>
             <div className='gr-row'>
                 <IconWithLink
@@ -203,7 +205,7 @@ const Cashier = () => (
                     img_src={it.url_for('images/pages/cashier/payment-agents.svg')}
                 />
                 <div className='gr-6 gr-8-m'>
-                    <span className = 'invisible normal_currency client_logged_out crypto_currency'>{it.L('Deposit in your local currency via an authorised, independent payment agent in your country.')}</span>
+                    <span className = 'client_logged_out'>{it.L('Deposit in your local currency via an authorised, independent payment agent in your country.')}</span>
                     <CashierNote className='gr-hide-m gr-child' text={it.L('Withdrawal via payment agent is available only if you deposit exclusively via payment agent.')} />
                 </div>
                 <CashierNote className='gr-12 gr-hide gr-show-m gr-child' text={it.L('Withdrawal via payment agent is available only if you deposit exclusively via payment agent.')} />
