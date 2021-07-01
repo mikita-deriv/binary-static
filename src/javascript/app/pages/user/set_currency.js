@@ -48,18 +48,18 @@ const SetCurrency = (() => {
                 const is_virtual = Client.get('is_virtual');
                 let currencies = [];
                 
-                if(is_virtual) {
+                if (is_virtual) {
                     currencies = /multi_account|set_currency/.test(popup_action) ?
-                    getOtherCurrencies(landing_company, allFiat) :
-                    /switch_cryptocurrency/.test(popup_action) ?
-                    GetCurrency.getCurrenciesOfOtherAccounts(true):
-                    getCurrencyChangeOptions(landing_company);
+                        getOtherCurrencies(landing_company, allFiat) :
+                        /switch_cryptocurrency/.test(popup_action) ?
+                            GetCurrency.getCurrenciesOfOtherAccounts(true) :
+                            getCurrencyChangeOptions(landing_company);
                 } else {
                     currencies = /multi_account|set_currency/.test(popup_action) ?
-                    getAvailableCurrencies(landing_company, payout_currencies) :
-                    /switch_cryptocurrency/.test(popup_action) ?
-                    GetCurrency.getCurrenciesOfOtherAccounts(true):
-                    getCurrencyChangeOptions(landing_company);
+                        getAvailableCurrencies(landing_company, payout_currencies) :
+                        /switch_cryptocurrency/.test(popup_action) ?
+                            GetCurrency.getCurrenciesOfOtherAccounts(true) :
+                            getCurrencyChangeOptions(landing_company);
                 }
                 
                 $('#hide_new_account').setVisibility(0);
@@ -68,10 +68,10 @@ const SetCurrency = (() => {
                 onSelection($currency_list, $error, false);
 
                 const action_map = {
-                    set_currency   : localize('Set currency'),
-                    change_currency: localize('Change currency'),
-                    multi_account  : localize('Create account'),
-                    switch_cryptocurrency  : localize('Continue'),
+                    set_currency         : localize('Set currency'),
+                    change_currency      : localize('Change currency'),
+                    multi_account        : localize('Create account'),
+                    switch_cryptocurrency: localize('Continue'),
                 };
 
                 $('.btn_cancel').off('click dblclick').on('click dblclick', cleanupPopup);
@@ -97,7 +97,7 @@ const SetCurrency = (() => {
         onSelection($currency_list, $error, true);
     };
 
-    const getAvailableCurrencies = (landing_company, payout_currencies) => 
+    const getAvailableCurrencies = (landing_company, payout_currencies) =>
         Client.get('landing_company_shortcode') === 'svg' ? GetCurrency.getCurrencies(landing_company) : payout_currencies;
 
     const getOtherCurrencies = (landing_company, allFiat) => {
@@ -109,14 +109,13 @@ const SetCurrency = (() => {
         if (allFiat) {
             return allowed_currencies.filter(
                 currency => !isCryptocurrency(currency)
-             );
-        } else {
-            return allowed_currencies.filter(
-                currency => !current_currencies.includes(currency) && isCryptocurrency(currency)
-             );
+            );
         }
+        return allowed_currencies.filter(
+            currency => !current_currencies.includes(currency) && isCryptocurrency(currency)
+        );
         
-    }
+    };
 
     const getCurrencyChangeOptions = (landing_company) => {
         const allowed_currencies = Client.getLandingCompanyValue(Client.get('loginid'), landing_company, 'legal_allowed_currencies');
@@ -165,7 +164,7 @@ const SetCurrency = (() => {
         const fiat_currencies = $fiat_currencies.html();
         let crypto_currencies = '';
        
-        if(popup_action === 'switch_cryptocurrency'){
+        if (popup_action === 'switch_cryptocurrency'){
             const $add_wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: 'NEW' });
             const $add_name    = $('<div/>', { class: 'currency-name' });
             $add_name.text(localize('Add new crypto account'));
@@ -194,9 +193,9 @@ const SetCurrency = (() => {
         if (has_one_group) {
             $('#set_currency_text').text(localize('Please select the currency for this account:'));
         } else if (isCashier) {
-            if(popup_action === 'switch_cryptocurrency'){
+            if (popup_action === 'switch_cryptocurrency'){
                 $('#set_currency_text').text(localize('Choose a cryptocurrency account'));
-            }else {
+            } else {
                 $('#set_currency_text').text(localize('Add a fiat currency account'));
             }
         }  else {
@@ -248,11 +247,11 @@ const SetCurrency = (() => {
             const selected_currency = $selected_currency.attr('id');
             let request = {};
 
-            if(popup_action === 'switch_cryptocurrency') {
-                if(selected_currency === 'NEW'){
+            if (popup_action === 'switch_cryptocurrency') {
+                if (selected_currency === 'NEW'){
                     localStorage.setItem('popup_action', 'multi_account');
                     onLoad(null, false, false);
-                }else{
+                } else {
                     cleanupPopup();
                     Header.switchLoginid(getLoginId(selected_currency), true);
                 }
@@ -273,7 +272,7 @@ const SetCurrency = (() => {
                         cleanupPopup();
                         setIsForNewAccount(true);
                         // ask client to set any missing information
-                       BinaryPjax.load(Url.urlFor('user/settings/detailsws')); 
+                        BinaryPjax.load(Url.urlFor('user/settings/detailsws'));
                     } else {
                         $error.text(response_c.error.message).setVisibility(1);
                     }
@@ -373,7 +372,7 @@ const SetCurrency = (() => {
         });
 
         return loginid;
-    }
+    };
 
     /**
      * Remove error text if $error is defined

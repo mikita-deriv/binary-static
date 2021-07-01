@@ -127,7 +127,7 @@ const Header = (() => {
         SocketCache.clear();
 
         if (reload_deposit) {
-            window.location.href = `${Url.urlFor('cashier/forwardws')}?action=deposit`; 
+            window.location.href = `${Url.urlFor('cashier/forwardws')}?action=deposit`;
         } else {
             window.location.reload();
         }

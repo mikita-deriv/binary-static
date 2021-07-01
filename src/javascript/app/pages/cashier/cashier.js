@@ -249,7 +249,7 @@ const Cashier = (() => {
                 const account_cryptocurrency = Currency.isCryptocurrency(currency);
                 const is_virtual_account = Client.get('is_virtual');
                 
-               /*  if (!account_cryptocurrency && is_virtual_account) {
+                /*  if (!account_cryptocurrency && is_virtual_account) {
                     $('.crypto_currency').setVisibility(1);
                     $('#PAYMENTMETHODS_topup_link').on('click', ()=>{
                         BinarySocket.send({ authorize: 1 }).then(() => {
@@ -322,16 +322,14 @@ const Cashier = (() => {
                             return false;
                         });
                     }
+                } else if (account_cryptocurrency) {
+                    $('.normal_currency').setVisibility(0);
+                    $('.crypto_currency').setVisibility(1);
+                    $('#CRYPTOMETHOD_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
                 } else {
-                    if (account_cryptocurrency) {
-                        $('.normal_currency').setVisibility(0);
-                        $('.crypto_currency').setVisibility(1);
-                        $('#CRYPTOMETHOD_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
-                    } else {
-                        $('.normal_currency').setVisibility(1);
-                        $('.crypto_currency').setVisibility(0);
-                        $('#PAYMENTMETHODS_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
-                    }
+                    $('.normal_currency').setVisibility(1);
+                    $('.crypto_currency').setVisibility(0);
+                    $('#PAYMENTMETHODS_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
                 }
             });
         }
