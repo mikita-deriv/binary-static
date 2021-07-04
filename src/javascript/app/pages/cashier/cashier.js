@@ -248,35 +248,39 @@ const Cashier = (() => {
                 const crypto_account = Client.hasCurrencyType('crypto');
                 const account_cryptocurrency = Currency.isCryptocurrency(currency);
                 const is_virtual_account = Client.get('is_virtual');
-                
-                /*  if (!account_cryptocurrency && is_virtual_account) {
+             
+                if (is_virtual_account || account_cryptocurrency) {
+                    $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
-                    $('#PAYMENTMETHODS_topup_link').on('click', ()=>{
-                        BinarySocket.send({ authorize: 1 }).then(() => {
-                            if (account_cryptocurrency  && fiat_account || is_virtual && fiat_account){
-                                BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+                    if (fiat_account) {
+                        $('#PAYMENTMETHODS_topup_link').on('click', () => {
+                            BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
                                     ok_text          : localize('Switch accounts'),
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch accounts?'),
                                     localized_message: localize('To deposit money, please switch to your [_1] account', fiat_account),
-                                    onConfirm        : () => Header.switchLoginid(fiat_account),
+                                    onConfirm        : () => Header.switchLoginid(fiat_account, true),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
                                 });
-                            } else {
-                                Accounts.showCurrencyPopUp('create', true);
-                            }
+                            
+                            });
+                            return false;
                         });
-                        return false;
-                    });
-                    const previous_href = $('#view_payment_methods').attr('href');
-                    $('#view_payment_methods').attr('href', previous_href.concat('?anchor=cryptocurrency'));
+                    } else {
+                        $('#PAYMENTMETHODS_topup_link').on('click', ()=>{
+                            Accounts.showCurrencyPopUp('create', true, true);
+                            return false;
+                        });
+                    }
                 } else {
                     $('.normal_currency').setVisibility(1);
+                    $('.crypto_currency').setVisibility(1);
                     $('#PAYMENTMETHODS_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
-                } */
-                if (is_virtual_account) {
+                }
+
+                if (is_virtual_account || !account_cryptocurrency){
                     $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
                     if (crypto_account) {
@@ -296,41 +300,41 @@ const Cashier = (() => {
                         });
                     } else {
                         $('#CRYPTOMETHOD_topup_link').on('click', ()=>{
-                            Accounts.showCurrencyPopUp('create', true, false);
+                            Accounts.showCurrencyPopUp('create', true, false, true);
                             return false;
                         });
                     }
-                    if (fiat_account) {
-                        $('#PAYMENTMETHODS_topup_link').on('click', () => {
+                } else {
+                    $('.normal_currency').setVisibility(1);
+                    $('.crypto_currency').setVisibility(1);
+                    $('#CRYPTOMETHOD_topup_link').on('click', ()=>{
+                        Accounts.showCurrencyPopUp('switch', true);
+                        return false;
+                    });
+                }
+
+                if (is_virtual_account){
+                    if (fiat_account || crypto_account){
+                        $('#PAYMENTMETHOD_topup_link').on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
-                                Dialog.confirm({
-                                    id               : 'deposit_currency_change_popup_container',
-                                    ok_text          : localize('Switch accounts'),
-                                    cancel_text      : localize('Cancel'),
-                                    localized_title  : localize('Switch accounts?'),
-                                    localized_message: localize('To deposit money, please switch to your [_1] account', fiat_account),
-                                    onConfirm        : () =>  Header.switchLoginid(fiat_account, true),
-                                    onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
-                                });
-                            
+                               
                             });
                             return false;
                         });
                     } else {
-                        $('#PAYMENTMETHODS_topup_link').on('click', ()=>{
-                            Accounts.showCurrencyPopUp('create', true, true);
-                            return false;
+                        $('#PAYMENTMETHOD_topup_link').on('click', () => {
+                            $('#PAYMENTMETHOD_topup_link').attr('href', Url.urlFor('new_account/realws'));
                         });
                     }
-                } else if (account_cryptocurrency) {
-                    $('.normal_currency').setVisibility(0);
-                    $('.crypto_currency').setVisibility(1);
-                    $('#CRYPTOMETHOD_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
                 } else {
-                    $('.normal_currency').setVisibility(1);
-                    $('.crypto_currency').setVisibility(0);
-                    $('#PAYMENTMETHODS_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+                    $('#PAYMENTMETHOD_topup_link').on('click', () => {
+                        BinarySocket.send({ authorize: 1 }).then(() => {
+                           
+                        });
+                        return false;
+                    });
                 }
+                    
             });
         }
         showContent();

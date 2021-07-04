@@ -148,14 +148,14 @@ const Accounts = (() => {
         switch: 'switch_cryptocurrency',
     };
 
-    const showCurrencyPopUp = (action, isCashier, allFiat) => {
+    const showCurrencyPopUp = (action, isCashier, allFiat, allCrypto) => {
         showPopup({
             url               : urlFor('user/set-currency'),
             content_id        : '#set_currency',
             form_id           : 'frm_set_currency',
             additionalFunction: () => {
                 localStorage.setItem('popup_action', action_map[action]);
-                SetCurrency.onLoad(onConfirmSetCurrency, isCashier, allFiat);
+                SetCurrency.onLoad(onConfirmSetCurrency, isCashier, allFiat,allCrypto);
             },
         });
     };
