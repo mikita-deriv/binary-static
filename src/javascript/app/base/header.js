@@ -112,7 +112,7 @@ const Header = (() => {
         }
     };
 
-    const switchLoginid = (loginid, reload_deposit) => {
+    const switchLoginid = (loginid, redirect_to) => {
         if (!loginid || loginid.length === 0) return;
         const token = Client.get('token', loginid);
         if (!token || token.length === 0) {
@@ -126,8 +126,10 @@ const Header = (() => {
         Client.set('loginid', loginid);
         SocketCache.clear();
 
-        if (reload_deposit) {
+        if (redirect_to === 'deposit') {
             window.location.href = `${Url.urlFor('cashier/forwardws')}?action=deposit`;
+        } else if (redirect_to === 'withdrawal') {
+            window.location.href = `${Url.urlFor('cashier/forwardws')}?action=withdraw`;
         } else {
             window.location.reload();
         }

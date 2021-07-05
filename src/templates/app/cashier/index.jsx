@@ -35,6 +35,7 @@ const DepositWithdrawButtonRealMoney = ({ is_virtual }) => (
                     </div>
                     <div className='gr-adapt client_real client_virtual invisible'>
                         <Button
+                            id='PAYMENTMETHODS_withdraw_topup_link'
                             className='toggle button client_real client_virtual invisible withdraw_btn_cashier'
                             href={it.url_for('/cashier/forwardws?action=withdraw')}
                             text={it.L('Withdraw')}

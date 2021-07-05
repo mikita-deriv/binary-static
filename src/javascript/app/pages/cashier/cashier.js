@@ -248,12 +248,16 @@ const Cashier = (() => {
                 const crypto_account = Client.hasCurrencyType('crypto');
                 const account_cryptocurrency = Currency.isCryptocurrency(currency);
                 const is_virtual_account = Client.get('is_virtual');
+                const el_fiat_deposit = $('#PAYMENTMETHODS_topup_link');
+                const el_fiat_withdraw = $('#PAYMENTMETHODS_withdraw_topup_link');
+                const el_crypto_deposit = $('#CRYPTOMETHOD_topup_link');
+                const el_crypto_withdraw = $('#CRYPTOMETHOD_withdraw_topup_link');
              
                 if (is_virtual_account || account_cryptocurrency) {
                     $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
                     if (fiat_account) {
-                        $('#PAYMENTMETHODS_topup_link').on('click', () => {
+                        el_fiat_deposit.on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
@@ -261,7 +265,22 @@ const Cashier = (() => {
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch accounts?'),
                                     localized_message: localize('To deposit money, please switch to your [_1] account', fiat_account),
-                                    onConfirm        : () => Header.switchLoginid(fiat_account, true),
+                                    onConfirm        : () =>  Header.switchLoginid(fiat_account, 'deposit'),
+                                    onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
+                                });
+                            
+                            });
+                            return false;
+                        });
+                        el_fiat_withdraw.on('click', () => {
+                            BinarySocket.send({ authorize: 1 }).then(() => {
+                                Dialog.confirm({
+                                    id               : 'deposit_currency_change_popup_container',
+                                    ok_text          : localize('Switch accounts'),
+                                    cancel_text      : localize('Cancel'),
+                                    localized_title  : localize('Switch accounts?'),
+                                    localized_message: localize('To withdraw money, please switch to your [_1] account', fiat_account),
+                                    onConfirm        : () =>  Header.switchLoginid(fiat_account, 'withdrawal'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
                                 });
                             
@@ -269,22 +288,27 @@ const Cashier = (() => {
                             return false;
                         });
                     } else {
-                        $('#PAYMENTMETHODS_topup_link').on('click', ()=>{
-                            Accounts.showCurrencyPopUp('create', true, true);
+                        el_fiat_deposit.on('click', ()=>{
+                            Accounts.showCurrencyPopUp('create', 'deposit', true);
+                            return false;
+                        });
+                        el_fiat_withdraw.on('click', ()=>{
+                            Accounts.showCurrencyPopUp('create', 'withdrawal', true);
                             return false;
                         });
                     }
                 } else {
                     $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
-                    $('#PAYMENTMETHODS_topup_link').attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+                    el_fiat_deposit.attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+                    el_fiat_withdraw.attr('href',`${Url.urlFor('cashier/forwardws')}?action=withdraw`);
                 }
 
                 if (is_virtual_account || !account_cryptocurrency){
                     $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
                     if (crypto_account) {
-                        $('#CRYPTOMETHOD_topup_link').on('click', () => {
+                        el_crypto_deposit.on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
@@ -292,49 +316,48 @@ const Cashier = (() => {
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch accounts?'),
                                     localized_message: localize('To deposit cryptocurrency, switch your account.'),
-                                    onConfirm        : () => Accounts.showCurrencyPopUp('switch', true),
+                                    onConfirm        : () => Accounts.showCurrencyPopUp('switch', 'deposit'),
+                                    onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
+                                });
+                            });
+                            return false;
+                        });
+                        el_crypto_withdraw.on('click', () => {
+                            BinarySocket.send({ authorize: 1 }).then(() => {
+                                Dialog.confirm({
+                                    id               : 'deposit_currency_change_popup_container',
+                                    ok_text          : localize('Switch to crypto account?'),
+                                    cancel_text      : localize('Cancel'),
+                                    localized_title  : localize('Switch accounts?'),
+                                    localized_message: localize('To withdraw cryptocurrency, switch your account.'),
+                                    onConfirm        : () => Accounts.showCurrencyPopUp('switch', 'withdrawal'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
                                 });
                             });
                             return false;
                         });
                     } else {
-                        $('#CRYPTOMETHOD_topup_link').on('click', ()=>{
-                            Accounts.showCurrencyPopUp('create', true, false, true);
+                        el_crypto_deposit.on('click', ()=>{
+                            Accounts.showCurrencyPopUp('create', 'deposit', false);
+                            return false;
+                        });
+                        el_crypto_withdraw.on('click', ()=>{
+                            Accounts.showCurrencyPopUp('create', 'withdrawal', false);
                             return false;
                         });
                     }
                 } else {
                     $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
-                    $('#CRYPTOMETHOD_topup_link').on('click', ()=>{
-                        Accounts.showCurrencyPopUp('switch', true);
+                    el_crypto_deposit.on('click', ()=>{
+                        Accounts.showCurrencyPopUp('switch', 'deposit');
+                        return false;
+                    });
+                    el_crypto_withdraw.on('click', ()=>{
+                        Accounts.showCurrencyPopUp('switch', 'withdrawal');
                         return false;
                     });
                 }
-
-                if (is_virtual_account){
-                    if (fiat_account || crypto_account){
-                        $('#PAYMENTMETHOD_topup_link').on('click', () => {
-                            BinarySocket.send({ authorize: 1 }).then(() => {
-                               
-                            });
-                            return false;
-                        });
-                    } else {
-                        $('#PAYMENTMETHOD_topup_link').on('click', () => {
-                            $('#PAYMENTMETHOD_topup_link').attr('href', Url.urlFor('new_account/realws'));
-                        });
-                    }
-                } else {
-                    $('#PAYMENTMETHOD_topup_link').on('click', () => {
-                        BinarySocket.send({ authorize: 1 }).then(() => {
-                           
-                        });
-                        return false;
-                    });
-                }
-                    
             });
         }
         showContent();

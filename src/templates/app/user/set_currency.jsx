@@ -47,6 +47,10 @@ const SetCurrency = () => (
                 <div className='invisible select_currency'>
                     <p id='set_currency_text'>{it.L('Please select the currency for this account:')}</p>
                 </div>
+                <div className='invisible select_currency'>
+                    <p id='set_currency_text_secondary' />
+                    <p id='set_currency_text_note' />
+                </div>
             </div>
 
             <div className='center-text invisible select_currency'>

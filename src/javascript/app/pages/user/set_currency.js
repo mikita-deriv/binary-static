@@ -18,7 +18,7 @@ const SetCurrency = (() => {
         onConfirmAdditional,
         $submit;
 
-    const onLoad = async (fncOnConfirm, isCashier, allFiat, allCrypto) => {
+    const onLoad = async (fncOnConfirm, redirect_to, all_fiat) => {
         onConfirmAdditional = fncOnConfirm;
         is_new_account = localStorage.getItem('is_new_account');
         localStorage.removeItem('is_new_account');
@@ -49,23 +49,21 @@ const SetCurrency = (() => {
                 const crypto_account = Client.hasCurrencyType('crypto');
                 let currencies = [];
                 
-                if (is_virtual || crypto_account) {
-                    currencies = /multi_account|set_currency/.test(popup_action) ?
-                        getOtherCurrencies(landing_company, allFiat) :
-                        /switch_cryptocurrency/.test(popup_action) ?
-                            GetCurrency.getCurrenciesOfOtherAccounts(true) :
-                            getCurrencyChangeOptions(landing_company);
+                if (/multi_account|set_currency/.test(popup_action)) {
+                    if (is_virtual || crypto_account) {
+                        currencies = getVirtualAvailableCurrencies(landing_company, all_fiat);
+                    } else {
+                        currencies = getAvailableCurrencies(landing_company, payout_currencies) ;
+                    }
+                } else if (/switch_cryptocurrency/.test(popup_action)) {
+                    currencies = getCurrentCryptoCurrencies();
                 } else {
-                    currencies = /multi_account|set_currency/.test(popup_action) ?
-                        getAvailableCurrencies(landing_company, payout_currencies) :
-                        /switch_cryptocurrency/.test(popup_action) ?
-                            GetCurrency.getCurrenciesOfOtherAccounts(true) :
-                            getCurrencyChangeOptions(landing_company);
+                    currencies = getCurrencyChangeOptions(landing_company);
                 }
                 
                 $('#hide_new_account').setVisibility(0);
                 $(`.show_${popup_action}`).setVisibility(1);
-                populateCurrencies(currencies, isCashier, allCrypto);
+                populateCurrencies(currencies);
                 onSelection($currency_list, $error, false);
 
                 const action_map = {
@@ -81,7 +79,7 @@ const SetCurrency = (() => {
                     .off('click dblclick')
                     .on('click dblclick', () => {
                         if (!$submit.hasClass('button-disabled')) {
-                            onConfirm($currency_list, $error, popup_action === 'multi_account');
+                            onConfirm($currency_list, $error, popup_action === 'multi_account', redirect_to);
                         }
                         $submit.addClass('button-disabled');
                     })
@@ -101,13 +99,21 @@ const SetCurrency = (() => {
     const getAvailableCurrencies = (landing_company, payout_currencies) =>
         Client.get('landing_company_shortcode') === 'svg' ? GetCurrency.getCurrencies(landing_company) : payout_currencies;
 
-    const getOtherCurrencies = (landing_company, allFiat) => {
+    const getCurrentCryptoCurrencies = () => {
+        const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
+
+        return current_currencies.filter(
+            currency => isCryptocurrency(currency)
+        );
+    };
+
+    const getVirtualAvailableCurrencies = (landing_company, all_fiat) => {
         const allowed_currencies = GetCurrency.getCurrencies(landing_company);
         const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
 
         current_currencies.push(Client.get('currency'));
 
-        if (allFiat) {
+        if (all_fiat) {
             return allowed_currencies.filter(
                 currency => !isCryptocurrency(currency)
             );
@@ -129,7 +135,7 @@ const SetCurrency = (() => {
         );
     };
 
-    const populateCurrencies = (currencies, isCashier, allCrypto) => {
+    const populateCurrencies = (currencies) => {
         const $fiat_currencies  = $('<div/>');
         const $cryptocurrencies = $('<div/>');
         currencies.forEach((c) => {
@@ -165,7 +171,7 @@ const SetCurrency = (() => {
         const fiat_currencies = $fiat_currencies.html();
         let crypto_currencies = '';
        
-        if (popup_action === 'switch_cryptocurrency'){
+        if (popup_action === 'switch_cryptocurrency') {
             const $add_wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: 'NEW' });
             const $add_image   = $('<div/>').append($('<img/>',  { src: Url.urlForStatic('images/pages/set_currency/add.svg') }));
             const $add_name    = $('<div/>', { class: 'currency-name' });
@@ -175,7 +181,7 @@ const SetCurrency = (() => {
 
             crypto_currencies = $cryptocurrencies.html();
             if (crypto_currencies) {
-                $('#crypto_currencies').setVisibility(1);
+                $('#crypto_currencies').setVisibility(0);
                 $('#crypto_currency_list').html(crypto_currencies).parent().setVisibility(1);
             }
         } else {
@@ -192,17 +198,21 @@ const SetCurrency = (() => {
         }
 
         const has_one_group = (!fiat_currencies && crypto_currencies) || (fiat_currencies && !crypto_currencies);
-        if (has_one_group && !isCashier && !allCrypto) {
-            $('#set_currency_text').text(localize('Please select the currency for this account:'));
-            $('#crypto').text(localize('test'));
-        } else if (isCashier && !allCrypto) {
-            if (popup_action === 'switch_cryptocurrency'){
+        if (has_one_group) {
+            if (popup_action === 'multi_account') {
+                if (!fiat_currencies && crypto_currencies) {
+                    $('#set_currency_text').text(localize('Create a cryptocurrency account'));
+                    $('#set_currency_text_secondary').text(localize('Choose your preferred cryptocurrency'));
+                    $('#set_currency_text_note').text(localize('You can open an account for each cryptocurrency.'));
+                } else if (fiat_currencies && !crypto_currencies) {
+                    $('#set_currency_text').text(localize('Add a fiat currency account'));
+                }
+            } else if (popup_action === 'switch_cryptocurrency') {
                 $('#set_currency_text').text(localize('Choose a cryptocurrency account'));
-            }  else {
-                $('#set_currency_text').text(localize('Add a fiat currency account'));
+                $('#set_currency_text_secondary').text(localize('Choose one of your accounts or add a new cryptocurrency account'));
+            } else {
+                $('#set_currency_text').text(localize('Please select the currency for this account:'));
             }
-        } else if (allCrypto) {
-            $('#set_currency_text').text(localize('Create a cryptocurrency account'));
         } else {
             $('#set_currency_text').text(localize('Do you want this to be a fiat account or crypto account? Please choose one:'));
         }
@@ -245,7 +255,7 @@ const SetCurrency = (() => {
         });
     };
 
-    const onConfirm = ($currency_list, $error, should_create_account) => {
+    const onConfirm = ($currency_list, $error, should_create_account, redirect_to) => {
         removeError($error);
         const $selected_currency = $currency_list.find('.selected');
         if ($selected_currency.length) {
@@ -258,7 +268,7 @@ const SetCurrency = (() => {
                     onLoad(null, false, false);
                 } else {
                     cleanupPopup();
-                    Header.switchLoginid(getLoginId(selected_currency), true);
+                    Header.switchLoginid(getLoginId(selected_currency), redirect_to, true);
                 }
 
                 return;
