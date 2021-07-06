@@ -76,9 +76,9 @@ const Header = (() => {
             const loginid_select = document.createElement('div');
             Client.getAllLoginids().forEach((loginid) => {
                 if (!Client.get('is_disabled', loginid) && Client.get('token', loginid)) {
-                    const account_title = Client.getAccountTitle(loginid);
-                    const is_real = !Client.getAccountType(loginid); // this function only returns virtual/gaming/financial types
-                    const currency = Client.get('currency', loginid);
+                    const account_title  = Client.getAccountTitle(loginid);
+                    const is_real        = !Client.getAccountType(loginid); // this function only returns virtual/gaming/financial types
+                    const currency       = Client.get('currency', loginid);
                     const localized_type = localize('[_1] Account', is_real && currency ? getCurrencyDisplayCode(currency) : account_title);
                     if (loginid === Client.get('loginid')) { // default account
                         applyToAllElements('.account-type', (el) => { elementInnerHtml(el, localized_type); });
@@ -290,7 +290,7 @@ const Header = (() => {
 
             const hasMissingRequiredField = () => {
                 // eslint-disable-next-line no-nested-ternary
-                const required_fields = is_svg ? [...necessary_signup_fields, ...necessary_withdrawal_fields]
+                const required_fields = is_svg ? [ ...necessary_signup_fields, ...necessary_withdrawal_fields ]
                     : Client.isAccountOfType('financial') ? [
                         'account_opening_reason',
                         'address_line_1',
@@ -366,24 +366,24 @@ const Header = (() => {
 
             const messages = {
                 cashier_locked          : () => localize('Deposits and withdrawals have been disabled on your account. Please check your email for more details.'),
-                currency                : () => buildMessage(localizeKeepPlaceholders('Please set the [_1]currency[_2] of your account.'), 'user/set-currency'),
-                unsubmitted             : () => buildMessage(localizeKeepPlaceholders('Please submit your [_1]proof of identity and proof of address[_2].'), 'user/authenticate'),
-                expired                 : () => buildSpecificMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_3] and [_2]proof of address[_3] have expired.'), [`<a href='${Url.urlFor('user/authenticate')}'>`, `<a href='${Url.urlFor('user/authenticate')}?authentication_tab=poa'>`, '</a>']),
-                expired_identity        : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_2] has expired.'), 'user/authenticate'),
-                expired_document        : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of address[_2] has expired.'), 'user/authenticate', '?authentication_tab=poa'),
-                rejected                : () => buildSpecificMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_3] and [_2]proof of address[_3] have not been verified.'), [`<a href='${Url.urlFor('user/authenticate')}'>`, `<a href='${Url.urlFor('user/authenticate')}?authentication_tab=poa'>`, '</a>']),
-                rejected_identity       : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_2] has not been verified.'), 'user/authenticate'),
-                rejected_document       : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of address[_2] has not been verified.'), 'user/authenticate', '?authentication_tab=poa'),
-                identity                : () => buildMessage(localizeKeepPlaceholders('Please submit your [_1]proof of identity[_2].'), 'user/authenticate'),
-                document                : () => buildMessage(localizeKeepPlaceholders('Please submit your [_1]proof of address[_2].'), 'user/authenticate', '?authentication_tab=poa'),
-                excluded_until          : () => buildMessage(localizeKeepPlaceholders('Your account is restricted. Kindly [_1]contact customer support[_2] for assistance.'), 'contact'),
-                financial_limit         : () => buildMessage(localizeKeepPlaceholders('Please set your [_1]30-day turnover limit[_2] to remove deposit limits.'), 'user/security/self_exclusionws'),
+                currency                : () => buildMessage(localizeKeepPlaceholders('Please set the [_1]currency[_2] of your account.'),                                                                                    'user/set-currency'),
+                unsubmitted             : () => buildMessage(localizeKeepPlaceholders('Please submit your [_1]proof of identity and proof of address[_2].'),                                                                  'user/authenticate'),
+                expired                 : () => buildSpecificMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_3] and [_2]proof of address[_3] have expired.'),                                                   [`<a href='${Url.urlFor('user/authenticate')}'>`, `<a href='${Url.urlFor('user/authenticate')}?authentication_tab=poa'>`, '</a>']),
+                expired_identity        : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_2] has expired.'),                                                                                         'user/authenticate'),
+                expired_document        : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of address[_2] has expired.'),                                                                                          'user/authenticate', '?authentication_tab=poa'),
+                rejected                : () => buildSpecificMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_3] and [_2]proof of address[_3] have not been verified.'),    [`<a href='${Url.urlFor('user/authenticate')}'>`, `<a href='${Url.urlFor('user/authenticate')}?authentication_tab=poa'>`, '</a>']),
+                rejected_identity       : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of identity[_2] has not been verified.'),                                                                               'user/authenticate'),
+                rejected_document       : () => buildMessage(localizeKeepPlaceholders('Your [_1]proof of address[_2] has not been verified.'),                                                                                'user/authenticate', '?authentication_tab=poa'),
+                identity                : () => buildMessage(localizeKeepPlaceholders('Please submit your [_1]proof of identity[_2].'),                                                                                       'user/authenticate'),
+                document                : () => buildMessage(localizeKeepPlaceholders('Please submit your [_1]proof of address[_2].'),                                                                                        'user/authenticate', '?authentication_tab=poa'),
+                excluded_until          : () => buildMessage(localizeKeepPlaceholders('Your account is restricted. Kindly [_1]contact customer support[_2] for assistance.'),                                                 'contact'),
+                financial_limit         : () => buildMessage(localizeKeepPlaceholders('Please set your [_1]30-day turnover limit[_2] to remove deposit limits.'),                                                             'user/security/self_exclusionws'),
                 mt5_withdrawal_locked   : () => localize('MT5 withdrawals have been disabled on your account. Please check your email for more details.'),
-                no_withdrawal_or_trading: () => buildMessage(localizeKeepPlaceholders('Trading and withdrawals have been disabled on your account. Kindly [_1]contact customer support[_2] for assistance.'), 'contact'),
-                required_fields         : () => buildMessage(localizeKeepPlaceholders('Please complete your [_1]personal details[_2] before you proceed.'), 'user/settings/detailsws'),
-                residence               : () => buildMessage(localizeKeepPlaceholders('Please set [_1]country of residence[_2] before upgrading to a real-money account.'), 'user/settings/detailsws'),
-                risk                    : () => buildMessage(localizeKeepPlaceholders('Please complete the [_1]financial assessment form[_2] to lift your withdrawal and trading limits.'), 'user/settings/assessmentws'),
-                tax                     : () => buildMessage(localizeKeepPlaceholders('Please [_1]complete your account profile[_2] to lift your withdrawal and trading limits.'), 'user/settings/detailsws'),
+                no_withdrawal_or_trading: () => buildMessage(localizeKeepPlaceholders('Trading and withdrawals have been disabled on your account. Kindly [_1]contact customer support[_2] for assistance.'),                 'contact'),
+                required_fields         : () => buildMessage(localizeKeepPlaceholders('Please complete your [_1]personal details[_2] before you proceed.'),                                                                   'user/settings/detailsws'),
+                residence               : () => buildMessage(localizeKeepPlaceholders('Please set [_1]country of residence[_2] before upgrading to a real-money account.'),                                                   'user/settings/detailsws'),
+                risk                    : () => buildMessage(localizeKeepPlaceholders('Please complete the [_1]financial assessment form[_2] to lift your withdrawal and trading limits.'),                                   'user/settings/assessmentws'),
+                tax                     : () => buildMessage(localizeKeepPlaceholders('Please [_1]complete your account profile[_2] to lift your withdrawal and trading limits.'),                                            'user/settings/detailsws'),
                 unwelcome               : () => localize('Trading and deposits have been disabled on your account. Kindly allow us some time to review the account.'),
                 withdrawal_locked_review: () => localize('Withdrawals have been disabled on your account. Please wait until your uploaded documents are verified.'),
                 withdrawal_locked       : () => localize('Withdrawals have been disabled on your account. Please check your email for more details.'),
@@ -467,7 +467,7 @@ const Header = (() => {
                 BinarySocket.wait('website_status', 'get_account_status', 'get_settings', 'balance').then(() => {
                     authentication = State.getResponse('get_account_status.authentication') || {};
                     get_account_status = State.getResponse('get_account_status') || {};
-                    status = get_account_status.status;
+                    status             = get_account_status.status;
                     checkStatus(check_statuses_real);
                     is_fully_authenticated = hasStatus('authenticated') && !+get_account_status.prompt_client_to_authenticate;
                     $('.account-id')[is_fully_authenticated ? 'append' : 'remove'](el_account_status);

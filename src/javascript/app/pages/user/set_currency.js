@@ -1,16 +1,16 @@
-const moment = require('moment');
+const moment             = require('moment');
 const setIsForNewAccount = require('./account/settings/personal_details').setIsForNewAccount;
-const GetCurrency = require('./get_currency');
-const BinaryPjax = require('../../base/binary_pjax');
-const Client = require('../../base/client');
-const Header = require('../../base/header');
-const BinarySocket = require('../../base/socket');
-const Dialog = require('../../common/attach_dom/dialog');
-const Currency = require('../../common/currency');
-const isCryptocurrency = require('../../../_common/base/currency_base').isCryptocurrency;
-const localize = require('../../../_common/localize').localize;
-const State = require('../../../_common/storage').State;
-const Url = require('../../../_common/url');
+const GetCurrency        = require('./get_currency');
+const BinaryPjax         = require('../../base/binary_pjax');
+const Client             = require('../../base/client');
+const Header             = require('../../base/header');
+const BinarySocket       = require('../../base/socket');
+const Dialog             = require('../../common/attach_dom/dialog');
+const Currency           = require('../../common/currency');
+const isCryptocurrency   = require('../../../_common/base/currency_base').isCryptocurrency;
+const localize           = require('../../../_common/localize').localize;
+const State              = require('../../../_common/storage').State;
+const Url                = require('../../../_common/url');
 
 const SetCurrency = (() => {
     let is_new_account,
@@ -30,8 +30,8 @@ const SetCurrency = (() => {
         $('#upgrade_to_mf').setVisibility(can_upgrade && type === 'financial');
 
         const payout_currencies = (await BinarySocket.wait('payout_currencies')).payout_currencies;
-        const $currency_list = $('.currency_list');
-        const $error = $('#set_currency').find('.error-msg');
+        const $currency_list    = $('.currency_list');
+        const $error            = $('#set_currency').find('.error-msg');
 
         popup_action = localStorage.getItem('popup_action');
         if (Client.get('currency') || popup_action) {
@@ -48,7 +48,7 @@ const SetCurrency = (() => {
                 const is_virtual = Client.get('is_virtual');
                 const crypto_account = Client.hasCurrencyType('crypto');
                 let currencies = [];
-
+                
                 if (/multi_account|set_currency/.test(popup_action)) {
                     if (is_virtual || crypto_account) {
                         currencies = getVirtualAvailableCurrencies(landing_company, all_fiat);
@@ -146,12 +146,12 @@ const SetCurrency = (() => {
     };
 
     const populateCurrencies = (currencies) => {
-        const $fiat_currencies = $('<div/>');
+        const $fiat_currencies  = $('<div/>');
         const $cryptocurrencies = $('<div/>');
         currencies.forEach((c) => {
             const $wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: c });
-            const $image = $('<div/>').append($('<img/>', { src: Url.urlForStatic(`images/pages/set_currency/${c.toLowerCase()}.svg`) }));
-            const $name = $('<div/>', { class: 'currency-name' });
+            const $image   = $('<div/>').append($('<img/>', { src: Url.urlForStatic(`images/pages/set_currency/${c.toLowerCase()}.svg`) }));
+            const $name    = $('<div/>', { class: 'currency-name' });
             if (Currency.isCryptocurrency(c)) {
                 const $display_name = $('<span/>', {
                     text: Currency.getCurrencyName(c) || c,
@@ -187,9 +187,10 @@ const SetCurrency = (() => {
             }
 
             const $add_wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: 'NEW' });
-            const $add_name = $('<div/>', { class: 'currency-name' });
+            const $add_image   = $('<div/>').append($('<img/>',  { src: Url.urlForStatic('images/pages/set_currency/add.svg') }));
+            const $add_name    = $('<div/>', { class: 'currency-name' });
             $add_name.text(localize('Add new crypto account'));
-            $add_wrapper.append($add_name);
+            $add_wrapper.append($add_image).append($add_name);
             $cryptocurrencies.append($add_wrapper);
 
             crypto_currencies = $cryptocurrencies.html();
