@@ -1,16 +1,16 @@
-const moment             = require('moment');
+const moment = require('moment');
 const setIsForNewAccount = require('./account/settings/personal_details').setIsForNewAccount;
-const GetCurrency        = require('./get_currency');
-const BinaryPjax         = require('../../base/binary_pjax');
-const Client             = require('../../base/client');
-const Header             = require('../../base/header');
-const BinarySocket       = require('../../base/socket');
-const Dialog             = require('../../common/attach_dom/dialog');
-const Currency           = require('../../common/currency');
-const isCryptocurrency   = require('../../../_common/base/currency_base').isCryptocurrency;
-const localize           = require('../../../_common/localize').localize;
-const State              = require('../../../_common/storage').State;
-const Url                = require('../../../_common/url');
+const GetCurrency = require('./get_currency');
+const BinaryPjax = require('../../base/binary_pjax');
+const Client = require('../../base/client');
+const Header = require('../../base/header');
+const BinarySocket = require('../../base/socket');
+const Dialog = require('../../common/attach_dom/dialog');
+const Currency = require('../../common/currency');
+const isCryptocurrency = require('../../../_common/base/currency_base').isCryptocurrency;
+const localize = require('../../../_common/localize').localize;
+const State = require('../../../_common/storage').State;
+const Url = require('../../../_common/url');
 
 const SetCurrency = (() => {
     let is_new_account,
@@ -30,8 +30,8 @@ const SetCurrency = (() => {
         $('#upgrade_to_mf').setVisibility(can_upgrade && type === 'financial');
 
         const payout_currencies = (await BinarySocket.wait('payout_currencies')).payout_currencies;
-        const $currency_list    = $('.currency_list');
-        const $error            = $('#set_currency').find('.error-msg');
+        const $currency_list = $('.currency_list');
+        const $error = $('#set_currency').find('.error-msg');
 
         popup_action = localStorage.getItem('popup_action');
         if (Client.get('currency') || popup_action) {
@@ -48,20 +48,25 @@ const SetCurrency = (() => {
                 const is_virtual = Client.get('is_virtual');
                 const crypto_account = Client.hasCurrencyType('crypto');
                 let currencies = [];
-                
+
                 if (/multi_account|set_currency/.test(popup_action)) {
                     if (is_virtual || crypto_account) {
                         currencies = getVirtualAvailableCurrencies(landing_company, all_fiat);
                     } else {
-                        currencies = getAvailableCurrencies(landing_company, payout_currencies) ;
+                        currencies = getAvailableCurrencies(landing_company, payout_currencies);
                     }
                 } else if (/switch_cryptocurrency/.test(popup_action)) {
-                    currencies = getCurrentCryptoCurrencies();
+                    currencies = getCurrentCryptoCurrencies(all_fiat);
                 } else {
                     currencies = getCurrencyChangeOptions(landing_company);
                 }
-                
+
                 $('#hide_new_account').setVisibility(0);
+
+                if (currencies.length === 0){
+                    return;
+                }
+
                 $(`.show_${popup_action}`).setVisibility(1);
                 populateCurrencies(currencies);
                 onSelection($currency_list, $error, false);
@@ -99,12 +104,17 @@ const SetCurrency = (() => {
     const getAvailableCurrencies = (landing_company, payout_currencies) =>
         Client.get('landing_company_shortcode') === 'svg' ? GetCurrency.getCurrencies(landing_company) : payout_currencies;
 
-    const getCurrentCryptoCurrencies = () => {
+    const getCurrentCryptoCurrencies = (all_fiat) => {
         const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
+        current_currencies.push(Client.get('currency'));
 
+        if (all_fiat) {
+            return current_currencies;
+        }
         return current_currencies.filter(
             currency => isCryptocurrency(currency)
         );
+        
     };
 
     const getVirtualAvailableCurrencies = (landing_company, all_fiat) => {
@@ -121,7 +131,7 @@ const SetCurrency = (() => {
         return allowed_currencies.filter(
             currency => !current_currencies.includes(currency) && isCryptocurrency(currency)
         );
-        
+
     };
 
     const getCurrencyChangeOptions = (landing_company) => {
@@ -136,12 +146,12 @@ const SetCurrency = (() => {
     };
 
     const populateCurrencies = (currencies) => {
-        const $fiat_currencies  = $('<div/>');
+        const $fiat_currencies = $('<div/>');
         const $cryptocurrencies = $('<div/>');
         currencies.forEach((c) => {
             const $wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: c });
-            const $image   = $('<div/>').append($('<img/>', { src: Url.urlForStatic(`images/pages/set_currency/${c.toLowerCase()}.svg`) }));
-            const $name    = $('<div/>', { class: 'currency-name' });
+            const $image = $('<div/>').append($('<img/>', { src: Url.urlForStatic(`images/pages/set_currency/${c.toLowerCase()}.svg`) }));
+            const $name = $('<div/>', { class: 'currency-name' });
             if (Currency.isCryptocurrency(c)) {
                 const $display_name = $('<span/>', {
                     text: Currency.getCurrencyName(c) || c,
@@ -170,13 +180,16 @@ const SetCurrency = (() => {
 
         const fiat_currencies = $fiat_currencies.html();
         let crypto_currencies = '';
-       
+
         if (popup_action === 'switch_cryptocurrency') {
+            if (fiat_currencies) {
+                $cryptocurrencies.prepend(fiat_currencies);
+            }
+
             const $add_wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: 'NEW' });
-            const $add_image   = $('<div/>').append($('<img/>',  { src: Url.urlForStatic('images/pages/set_currency/add.svg') }));
-            const $add_name    = $('<div/>', { class: 'currency-name' });
+            const $add_name = $('<div/>', { class: 'currency-name' });
             $add_name.text(localize('Add new crypto account'));
-            $add_wrapper.append($add_image).append($add_name);
+            $add_wrapper.append($add_name);
             $cryptocurrencies.append($add_wrapper);
 
             crypto_currencies = $cryptocurrencies.html();
@@ -213,6 +226,9 @@ const SetCurrency = (() => {
             } else {
                 $('#set_currency_text').text(localize('Please select the currency for this account:'));
             }
+        } else if (fiat_currencies && crypto_currencies) {
+            $('#set_currency_text').text(localize('Choose an account'));
+            $('#set_currency_text_secondary').text(localize('Choose one of your accounts or add a new cryptocurrency account'));
         } else {
             $('#set_currency_text').text(localize('Do you want this to be a fiat account or crypto account? Please choose one:'));
         }
@@ -327,7 +343,7 @@ const SetCurrency = (() => {
                         $('#congratulations_message').html(
                             popup_action === 'set_currency' ?
                                 localize('You have successfully set your account currency to [_1].', [`<strong>${selected_currency_display}</strong>`]) :
-                                localize('You have successfully changed your account currency from [_1] to [_2].', [ `<strong>${previous_currency_display}</strong>`, `<strong>${selected_currency_display}</strong>` ])
+                                localize('You have successfully changed your account currency from [_1] to [_2].', [`<strong>${previous_currency_display}</strong>`, `<strong>${selected_currency_display}</strong>`])
                         );
                         $('.btn_cancel, #deposit_btn, #set_currency, #show_new_account').setVisibility(1);
                         $(`#${Client.get('loginid')}`).find('td[datath="Currency"]').text(selected_currency_display);

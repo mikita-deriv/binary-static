@@ -252,6 +252,8 @@ const Cashier = (() => {
                 const el_fiat_withdraw = $('#PAYMENTMETHODS_withdraw_topup_link');
                 const el_crypto_deposit = $('#CRYPTOMETHOD_topup_link');
                 const el_crypto_withdraw = $('#CRYPTOMETHOD_withdraw_topup_link');
+                const el_paymentmethod_deposit = $('#PAYMENTMETHOD_topup_link');
+                const el_paymentmethod_withdraw  = $('#PAYMENTMETHOD_withdraw_topup_link');
              
                 if (is_virtual_account || account_cryptocurrency) {
                     $('.normal_currency').setVisibility(1);
@@ -355,6 +357,44 @@ const Cashier = (() => {
                     });
                     el_crypto_withdraw.on('click', ()=>{
                         Accounts.showCurrencyPopUp('switch', 'withdrawal');
+                        return false;
+                    });
+                }
+
+                if (is_virtual_account){
+                    if (fiat_account || crypto_account){
+                        el_paymentmethod_deposit.on('click', () => {
+                            BinarySocket.send({ authorize: 1 }).then(() => {
+                                Accounts.showCurrencyPopUp('switch', 'payment_agent', true);
+                            });
+                            return false;
+                        });
+                        el_paymentmethod_withdraw.on('click', () => {
+                            BinarySocket.send({ authorize: 1 }).then(() => {
+                                Accounts.showCurrencyPopUp('switch', 'payment_agent', true);
+                            });
+                            return false;
+                        });
+                        
+                    } else {
+                        el_paymentmethod_deposit.on('click', () => {
+                            el_paymentmethod_deposit.attr('href', Url.urlFor('new_account/realws'));
+                        });
+                        el_paymentmethod_withdraw.on('click', () => {
+                            el_paymentmethod_withdraw.attr('href', Url.urlFor('new_account/realws'));
+                        });
+                    }
+                } else {
+                    el_paymentmethod_deposit.on('click', () => {
+                        BinarySocket.send({ authorize: 1 }).then(() => {
+                            Accounts.showCurrencyPopUp('switch', 'payment_agent', true);
+                        });
+                        return false;
+                    });
+                    el_paymentmethod_withdraw.on('click', () => {
+                        BinarySocket.send({ authorize: 1 }).then(() => {
+                            Accounts.showCurrencyPopUp('switch', 'payment_agent', true);
+                        });
                         return false;
                     });
                 }

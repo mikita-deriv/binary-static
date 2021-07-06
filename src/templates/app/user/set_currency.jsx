@@ -1,5 +1,5 @@
-import React             from 'react';
-import Loading           from '../../_common/components/loading.jsx';
+import React from 'react';
+import Loading from '../../_common/components/loading.jsx';
 import { SeparatorLine } from '../../_common/components/separator_line.jsx';
 
 const Currencies = ({ text, id }) => (

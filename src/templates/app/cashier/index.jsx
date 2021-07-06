@@ -1,5 +1,5 @@
-import React             from 'react';
-import { Button }        from '../../_common/components/elements.jsx';
+import React from 'react';
+import { Button } from '../../_common/components/elements.jsx';
 import { SeparatorLine } from '../../_common/components/separator_line.jsx';
 
 const IconWithLink = ({ button_id, button_link, img_id, img_src }) => (
@@ -15,10 +15,10 @@ const IconWithLink = ({ button_id, button_link, img_id, img_src }) => (
 );
 
 const DepositWithdrawButtonRealMoney = ({ is_virtual }) => (
-    <div className= {is_virtual ? 'gr-4 gr-12-m' : 'gr-2 gr-12-m'}>
+    <div className={is_virtual ? 'gr-4 gr-12-m' : 'gr-2 gr-12-m'}>
         <SeparatorLine className='gr-parent gr-hide gr-show-m gr-padding-10' invisible />
         <div className='gr-row gr-row-align-left gr-row-align-right-m'>
-            { is_virtual ?
+            {is_virtual ?
                 <div className='gr-adapt'>
                     <Button className='toggle button' id='VRT_topup_link' text={it.L('Reset my virtual balance')} />
                 </div>
@@ -28,7 +28,7 @@ const DepositWithdrawButtonRealMoney = ({ is_virtual }) => (
                         <Button
                             className='toggle button client_real client_virtual invisible deposit_btn_cashier'
                             id='PAYMENTMETHODS_topup_link'
-                            href = 'javasript:;'
+                            href='javasript:;'
                             text={it.L('Deposit')}
                             text_className='deposit'
                         />
@@ -49,16 +49,16 @@ const DepositWithdrawButtonRealMoney = ({ is_virtual }) => (
 );
 
 const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) => (
-    <div className= 'gr-2 gr-12-m'>
+    <div className='gr-2 gr-12-m'>
         <SeparatorLine className='gr-parent gr-hide gr-show-m gr-padding-10' invisible />
         <div className='gr-row gr-row-align-left gr-row-align-right-m'>
-            { is_cryptocurrencies_method ?
+            {is_cryptocurrencies_method ?
                 <React.Fragment>
                     <div className='gr-adapt gr-no-gutter-m client_real client_virtual invisible gr-parent'>
                         <Button
                             className='toggle button client_real client_virtual invisible deposit_btn_cashier'
                             id='CRYPTOMETHOD_topup_link'
-                            href = 'javasript:;'
+                            href='javasript:;'
                             text={it.L('Deposit')}
                             text_className='deposit'
                         />
@@ -79,7 +79,7 @@ const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) =
                         <Button
                             className='toggle button client_real client_virtual invisible deposit_btn_cashier'
                             id='PAYMENTMETHOD_topup_link'
-                            href = 'javasript:;'
+                            href='javasript:;'
                             text={it.L('Deposit')}
                             text_className='deposit'
                         />
@@ -196,7 +196,7 @@ const Cashier = () => (
 
         <div className='gr-padding-10 table-body crypto_currency' id='payment-agent-section'>
             <h3 className='gr-padding-10'>
-                <span className='client_logged_out'>{it.L('Desposit via payment agents')}</span>
+                <span className='client_logged_out'>{it.L('Deposit via payment agents')}</span>
             </h3>
             <div className='gr-row'>
                 <IconWithLink
@@ -206,7 +206,7 @@ const Cashier = () => (
                     img_src={it.url_for('images/pages/cashier/payment-agents.svg')}
                 />
                 <div className='gr-6 gr-8-m'>
-                    <span className = 'client_logged_out'>{it.L('Deposit in your local currency via an authorised, independent payment agent in your country.')}</span>
+                    <span className='client_logged_out'>{it.L('Deposit in your local currency via an authorised, independent payment agent in your country.')}</span>
                     <CashierNote className='gr-hide-m gr-child' text={it.L('Withdrawal via payment agent is available only if you deposit exclusively via payment agent.')} />
                 </div>
                 <CashierNote className='gr-12 gr-hide gr-show-m gr-child' text={it.L('Withdrawal via payment agent is available only if you deposit exclusively via payment agent.')} />
