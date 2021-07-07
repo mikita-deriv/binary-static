@@ -1,5 +1,10 @@
 // styling for static pages that are too short or simple to need their own styling page
 
+@font-face {
+    font-family: 'Open Sans', sans-serif;
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+}
+
 .payment-methods__reference {
     display: inline-block;
     height: 30px;
@@ -840,6 +845,13 @@ body #not_authenticated_financial ul.checked > li {
 
     #set_currency_text {
         margin-top: 0;
+    }
+    #set_currency_text_secondary {
+        font-size: 16px;
+    }
+    #set_currency_text_note {
+        font-size: 10px;
+        font-family: 'Open Sans', sans-serif;
     }
     #fiat_currencies, #crypto_currencies {
         + div {

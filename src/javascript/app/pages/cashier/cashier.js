@@ -23,7 +23,7 @@ const Cashier = (() => {
         let $toggler;
         if (anchor) {
             $toggler = $(`[data-anchor='${anchor}']`);
-            $toggler.find('.td-descriptioncashier_iframe').addClass('active'); // toggle open description
+            $toggler.find('.td-description').addClass('active'); // toggle open description
             $toggler.find('.td-list').removeClass('active');
             $toggler.find('.toggler').addClass('open');
         }
@@ -248,12 +248,12 @@ const Cashier = (() => {
                 const crypto_account = Client.hasCurrencyType('crypto');
                 const account_cryptocurrency = Currency.isCryptocurrency(currency);
                 const is_virtual_account = Client.get('is_virtual');
-                const el_fiat_deposit = $('#PAYMENTMETHODS_topup_link');
-                const el_fiat_withdraw = $('#PAYMENTMETHODS_withdraw_topup_link');
-                const el_crypto_deposit = $('#CRYPTOMETHOD_topup_link');
-                const el_crypto_withdraw = $('#CRYPTOMETHOD_withdraw_topup_link');
-                const el_paymentmethod_deposit = $('#PAYMENTMETHOD_topup_link');
-                const el_paymentmethod_withdraw  = $('#PAYMENTMETHOD_withdraw_topup_link');
+                const el_fiat_deposit = $('#fiat_deposit_link');
+                const el_fiat_withdraw = $('#fiat_withdraw_link');
+                const el_crypto_deposit = $('#crypto_deposit_link');
+                const el_crypto_withdraw = $('#crypto_withdraw_link');
+                const el_paymentmethod_deposit = $('#payment_agent_deposit_link');
+                const el_paymentmethod_withdraw  = $('#payment_agent_withdraw_link');
              
                 if (is_virtual_account || account_cryptocurrency) {
                     $('.normal_currency').setVisibility(1);

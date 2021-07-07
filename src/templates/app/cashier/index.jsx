@@ -27,7 +27,7 @@ const DepositWithdrawButtonRealMoney = ({ is_virtual }) => (
                     <div className='gr-adapt gr-no-gutter-m client_real client_virtual invisible gr-parent'>
                         <Button
                             className='toggle button client_real client_virtual invisible deposit_btn_cashier'
-                            id='PAYMENTMETHODS_topup_link'
+                            id='fiat_deposit_link'
                             href='javasript:;'
                             text={it.L('Deposit')}
                             text_className='deposit'
@@ -35,7 +35,7 @@ const DepositWithdrawButtonRealMoney = ({ is_virtual }) => (
                     </div>
                     <div className='gr-adapt client_real client_virtual invisible'>
                         <Button
-                            id='PAYMENTMETHODS_withdraw_topup_link'
+                            id='fiat_withdraw_link'
                             className='toggle button client_real client_virtual invisible withdraw_btn_cashier'
                             href={it.url_for('/cashier/forwardws?action=withdraw')}
                             text={it.L('Withdraw')}
@@ -57,7 +57,7 @@ const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) =
                     <div className='gr-adapt gr-no-gutter-m client_real client_virtual invisible gr-parent'>
                         <Button
                             className='toggle button client_real client_virtual invisible deposit_btn_cashier'
-                            id='CRYPTOMETHOD_topup_link'
+                            id='crypto_deposit_link'
                             href='javasript:;'
                             text={it.L('Deposit')}
                             text_className='deposit'
@@ -66,7 +66,7 @@ const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) =
                     <div className='gr-adapt client_real client_virtual invisible'>
                         <Button
                             className='toggle button client_real client_virtual invisible withdraw_btn_cashier'
-                            id='CRYPTOMETHOD_withdraw_topup_link'
+                            id='crypto_withdraw_link'
                             href={it.url_for('/cashier/forwardws?action=withdraw')}
                             text={it.L('Withdraw')}
                             text_className='withdraw'
@@ -78,7 +78,7 @@ const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) =
                     <div className='gr-adapt gr-no-gutter-m client_real client_virtual invisible gr-parent'>
                         <Button
                             className='toggle button client_real client_virtual invisible deposit_btn_cashier'
-                            id='PAYMENTMETHOD_topup_link'
+                            id='payment_agent_deposit_link'
                             href='javasript:;'
                             text={it.L('Deposit')}
                             text_className='deposit'
@@ -87,7 +87,7 @@ const DepositWithdrawButtonCryptocurrencies = ({ is_cryptocurrencies_method }) =
                     <div className='gr-adapt client_real client_virtual invisible'>
                         <Button
                             className='toggle button client_real client_virtual invisible withdraw_btn_cashier'
-                            id='PAYMENTMETHOD_withdraw_topup_link'
+                            id='payment_agent_withdraw_link'
                             href={it.url_for('/paymentagent/withdrawws')}
                             text={it.L('Withdraw')}
                             text_className='withdraw'

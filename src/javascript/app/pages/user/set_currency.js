@@ -49,7 +49,7 @@ const SetCurrency = (() => {
                 const crypto_account = Client.hasCurrencyType('crypto');
                 let currencies = [];
                 
-                if (/multi_account|set_currency/.test(popup_action)) {
+                if (/multi_account|add_cryptocurrency|set_currency/.test(popup_action)) {
                     if (is_virtual || crypto_account) {
                         currencies = getVirtualAvailableCurrencies(landing_company, all_fiat);
                     } else {
@@ -76,6 +76,7 @@ const SetCurrency = (() => {
                     change_currency      : localize('Change currency'),
                     multi_account        : localize('Create account'),
                     switch_cryptocurrency: localize('Continue'),
+                    add_cryptocurrency   : localize('Add account'),
                 };
 
                 $('.btn_cancel').off('click dblclick').on('click dblclick', cleanupPopup);
@@ -84,7 +85,7 @@ const SetCurrency = (() => {
                     .off('click dblclick')
                     .on('click dblclick', () => {
                         if (!$submit.hasClass('button-disabled')) {
-                            onConfirm($currency_list, $error, popup_action === 'multi_account', redirect_to);
+                            onConfirm($currency_list, $error, popup_action === 'multi_account' || popup_action === 'add_cryptocurrency', redirect_to);
                         }
                         $submit.addClass('button-disabled');
                     })
@@ -213,8 +214,9 @@ const SetCurrency = (() => {
 
         const has_one_group = (!fiat_currencies && crypto_currencies) || (fiat_currencies && !crypto_currencies);
         if (has_one_group) {
-            if (popup_action === 'multi_account') {
+            if (popup_action === 'multi_account' || popup_action ===  'add_cryptocurrency') {
                 if (!fiat_currencies && crypto_currencies) {
+                    $('#crypto_currencies').setVisibility(0);
                     $('#set_currency_text').text(localize('Create a cryptocurrency account'));
                     $('#set_currency_text_secondary').text(localize('Choose your preferred cryptocurrency'));
                     $('#set_currency_text_note').text(localize('You can open an account for each cryptocurrency.'));
@@ -281,7 +283,7 @@ const SetCurrency = (() => {
 
             if (popup_action === 'switch_cryptocurrency') {
                 if (selected_currency === 'NEW'){
-                    localStorage.setItem('popup_action', 'multi_account');
+                    localStorage.setItem('popup_action', 'add_cryptocurrency');
                     onLoad(null, false, false);
                 } else {
                     cleanupPopup();
@@ -300,7 +302,7 @@ const SetCurrency = (() => {
                     $submit.removeClass('button-disabled');
                 }
                 if (response_c.error) {
-                    if (popup_action === 'multi_account' && /InsufficientAccountDetails|InputValidationFailed/.test(response_c.error.code)) {
+                    if (popup_action === 'multi_account' || popup_action === 'add_cryptocurrency' && /InsufficientAccountDetails|InputValidationFailed/.test(response_c.error.code)) {
                         cleanupPopup();
                         setIsForNewAccount(true);
                         // ask client to set any missing information
@@ -311,7 +313,7 @@ const SetCurrency = (() => {
                 } else {
                     const previous_currency = Client.get('currency');
                     // Use the client_id while creating a new account
-                    const new_account_loginid = popup_action === 'multi_account' ? response_c.new_account_real.client_id : undefined;
+                    const new_account_loginid = popup_action === 'multi_account' || popup_action === 'add_cryptocurrency' ? response_c.new_account_real.client_id : undefined;
                     Client.set('currency', selected_currency, new_account_loginid);
                     BinarySocket.send({ balance: 1 });
                     BinarySocket.send({ payout_currencies: 1 }, { forced: true });
@@ -348,7 +350,7 @@ const SetCurrency = (() => {
                         );
                         $('.btn_cancel, #deposit_btn, #set_currency, #show_new_account').setVisibility(1);
                         $(`#${Client.get('loginid')}`).find('td[datath="Currency"]').text(selected_currency_display);
-                    } else if (popup_action === 'multi_account') {
+                    } else if (popup_action === 'multi_account' || popup_action === 'add_cryptocurrency') {
                         const new_account = response_c.new_account_real;
                         localStorage.setItem('is_new_account', 1);
                         cleanupPopup();
