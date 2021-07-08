@@ -316,7 +316,7 @@ const Cashier = (() => {
                                     id               : 'deposit_currency_change_popup_container',
                                     ok_text          : localize('Switch to crypto account?'),
                                     cancel_text      : localize('Cancel'),
-                                    localized_title  : localize('Switch accounts?'),
+                                    localized_title  : localize('Switch to crypto account?'),
                                     localized_message: localize('To deposit cryptocurrency, switch your account.'),
                                     onConfirm        : () => Accounts.showCurrencyPopUp('switch', 'deposit'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
