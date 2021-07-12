@@ -145,7 +145,7 @@ const Accounts = (() => {
         create: 'multi_account',
         set   : 'set_currency',
         change: 'change_currency',
-        switch: 'switch_cryptocurrency',
+        switch: 'switch_account',
     };
 
     const showCurrencyPopUp = (action, redirect_to, all_fiat) => {

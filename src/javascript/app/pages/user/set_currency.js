@@ -46,16 +46,16 @@ const SetCurrency = (() => {
                     .setVisibility(1);
             } else if (popup_action) {
                 const is_virtual = Client.get('is_virtual');
-                const crypto_account = Client.hasCurrencyType('crypto');
+                const has_crypto_account = Client.hasCurrencyType('crypto');
                 let currencies = [];
                 
                 if (/multi_account|set_currency/.test(popup_action)) {
-                    if (is_virtual || crypto_account) {
+                    if (is_virtual || has_crypto_account) {
                         currencies = getVirtualAvailableCurrencies(landing_company, all_fiat);
                     } else {
                         currencies = getAvailableCurrencies(landing_company, payout_currencies);
                     }
-                } else if (/switch_cryptocurrency/.test(popup_action)) {
+                } else if (/switch_account/.test(popup_action)) {
                     currencies = getCurrentCryptoCurrencies(all_fiat);
                 } else {
                     currencies = getCurrencyChangeOptions(landing_company);
@@ -72,10 +72,10 @@ const SetCurrency = (() => {
                 onSelection($currency_list, $error, false);
 
                 const action_map = {
-                    set_currency         : localize('Set currency'),
-                    change_currency      : localize('Change currency'),
-                    multi_account        : all_fiat ? localize('Create account') : localize('Add account'),
-                    switch_cryptocurrency: localize('Continue'),
+                    set_currency   : localize('Set currency'),
+                    change_currency: localize('Change currency'),
+                    multi_account  : all_fiat ? localize('Create account') : localize('Add account'),
+                    switch_account : localize('Continue'),
                 };
 
                 $('.btn_cancel').off('click dblclick').on('click dblclick', cleanupPopup);
@@ -180,7 +180,7 @@ const SetCurrency = (() => {
         const fiat_currencies = $fiat_currencies.html();
         let crypto_currencies = '';
 
-        if (popup_action === 'switch_cryptocurrency') {
+        if (popup_action === 'switch_account') {
             if (fiat_currencies) {
                 $cryptocurrencies.prepend(fiat_currencies);
             }
@@ -221,7 +221,7 @@ const SetCurrency = (() => {
                 } else if (fiat_currencies && !crypto_currencies) {
                     $('#set_currency_text').text(localize('Add a fiat currency account'));
                 }
-            } else if (popup_action === 'switch_cryptocurrency') {
+            } else if (popup_action === 'switch_account') {
                 $('#set_currency_text').text(localize('Choose a cryptocurrency account'));
                 $('#set_currency_text_secondary').text(localize('Choose one of your accounts or add a new cryptocurrency account'));
             } else {
@@ -279,13 +279,13 @@ const SetCurrency = (() => {
             const selected_currency = $selected_currency.attr('id');
             let request = {};
 
-            if (popup_action === 'switch_cryptocurrency') {
+            if (popup_action === 'switch_account') {
                 if (selected_currency === 'NEW'){
                     localStorage.setItem('popup_action', 'multi_account');
                     onLoad(null, false, false);
                 } else {
                     cleanupPopup();
-                    Header.switchLoginid(getLoginId(selected_currency), redirect_to, true);
+                    Header.switchLoginid(getLoginid(selected_currency), redirect_to, true);
                 }
 
                 return;
@@ -390,7 +390,7 @@ const SetCurrency = (() => {
     /**
      * Get login id by selected currency
      */
-    const getLoginId = (selected_currency) => {
+    const getLoginid = (selected_currency) => {
 
         const all_loginids = Client.getAllLoginids();
         let loginid = '';

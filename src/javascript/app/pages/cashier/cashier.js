@@ -244,9 +244,9 @@ const Cashier = (() => {
                     });
                 }
 
-                const fiat_account = Client.hasCurrencyType('fiat');
-                const crypto_account = Client.hasCurrencyType('crypto');
-                const account_cryptocurrency = Currency.isCryptocurrency(currency);
+                const has_fiat_account = Client.hasCurrencyType('fiat');
+                const has_crypto_account = Client.hasCurrencyType('crypto');
+                const is_cryptocurrency_account = Currency.isCryptocurrency(currency);
                 const is_virtual_account = Client.get('is_virtual');
                 const el_fiat_deposit = $('#fiat_deposit_link');
                 const el_fiat_withdraw = $('#fiat_withdraw_link');
@@ -255,10 +255,10 @@ const Cashier = (() => {
                 const el_paymentmethod_deposit = $('#payment_agent_deposit_link');
                 const el_paymentmethod_withdraw  = $('#payment_agent_withdraw_link');
              
-                if (is_virtual_account || account_cryptocurrency) {
+                if (is_virtual_account || is_cryptocurrency_account) {
                     $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
-                    if (fiat_account) {
+                    if (has_fiat_account) {
                         el_fiat_deposit.on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
@@ -266,8 +266,8 @@ const Cashier = (() => {
                                     ok_text          : localize('Switch accounts'),
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch accounts?'),
-                                    localized_message: localize('To deposit money, please switch to your [_1] account', fiat_account),
-                                    onConfirm        : () =>  Header.switchLoginid(fiat_account, 'deposit'),
+                                    localized_message: localize('To deposit money, please switch to your [_1] account', has_fiat_account),
+                                    onConfirm        : () =>  Header.switchLoginid(has_fiat_account, 'deposit'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
                                 });
                             
@@ -281,8 +281,8 @@ const Cashier = (() => {
                                     ok_text          : localize('Switch accounts'),
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch accounts?'),
-                                    localized_message: localize('To withdraw money, please switch to your [_1] account', fiat_account),
-                                    onConfirm        : () =>  Header.switchLoginid(fiat_account, 'withdrawal'),
+                                    localized_message: localize('To withdraw money, please switch to your [_1] account', has_fiat_account),
+                                    onConfirm        : () =>  Header.switchLoginid(has_fiat_account, 'withdrawal'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
                                 });
                             
@@ -306,10 +306,10 @@ const Cashier = (() => {
                     el_fiat_withdraw.attr('href',`${Url.urlFor('cashier/forwardws')}?action=withdraw`);
                 }
 
-                if (is_virtual_account || !account_cryptocurrency){
+                if (is_virtual_account || !is_cryptocurrency_account){
                     $('.normal_currency').setVisibility(1);
                     $('.crypto_currency').setVisibility(1);
-                    if (crypto_account) {
+                    if (has_crypto_account) {
                         el_crypto_deposit.on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
@@ -362,7 +362,7 @@ const Cashier = (() => {
                 }
 
                 if (is_virtual_account){
-                    if (fiat_account || crypto_account){
+                    if (has_fiat_account || has_crypto_account){
                         el_paymentmethod_deposit.on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Accounts.showCurrencyPopUp('switch', 'payment_agent', true);
