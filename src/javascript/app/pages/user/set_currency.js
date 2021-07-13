@@ -106,8 +106,9 @@ const SetCurrency = (() => {
 
     const getCurrentCryptoCurrencies = (all_fiat) => {
         const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
-        current_currencies.push(Client.get('currency'));
-
+        if (!Client.get('is_virtual')){
+            current_currencies.push(Client.get('currency'));
+        }
         if (all_fiat) {
             return current_currencies;
         }
@@ -304,7 +305,7 @@ const SetCurrency = (() => {
                         cleanupPopup();
                         setIsForNewAccount(true);
                         // ask client to set any missing information
-                        BinaryPjax.load(Url.urlFor('user/settings/detailsws'));
+                        BinaryPjax.load(Url.urlFor('new_account/realws'));
                     } else {
                         $error.text(response_c.error.message).setVisibility(1);
                     }
