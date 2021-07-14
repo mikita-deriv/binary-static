@@ -254,10 +254,16 @@ const Cashier = (() => {
                 const el_crypto_withdraw = $('#crypto_withdraw_link');
                 const el_paymentmethod_deposit = $('#payment_agent_deposit_link');
                 const el_paymentmethod_withdraw  = $('#payment_agent_withdraw_link');
-             
+                const is_eu_account = ['iom', 'malta'].includes(Client.get('landing_company_shortcode'));
+            
+                if (is_eu_account) {
+                    $('.crypto_currency').setVisibility(0);
+                    $('#payment-agent-section').setVisibility(0);
+                }
+
                 if (is_virtual_account || is_cryptocurrency_account) {
                     $('.normal_currency').setVisibility(1);
-                    $('.crypto_currency').setVisibility(1);
+                    $('.payment-agent-section').setVisibility(1);
                     if (has_fiat_account) {
                         el_fiat_deposit.on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
@@ -301,14 +307,12 @@ const Cashier = (() => {
                     }
                 } else {
                     $('.normal_currency').setVisibility(1);
-                    $('.crypto_currency').setVisibility(1);
                     el_fiat_deposit.attr('href',`${Url.urlFor('cashier/forwardws')}?action=deposit`);
                     el_fiat_withdraw.attr('href',`${Url.urlFor('cashier/forwardws')}?action=withdraw`);
                 }
 
                 if (is_virtual_account || !is_cryptocurrency_account){
                     $('.normal_currency').setVisibility(1);
-                    $('.crypto_currency').setVisibility(1);
                     if (has_crypto_account) {
                         el_crypto_deposit.on('click', () => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
@@ -350,7 +354,6 @@ const Cashier = (() => {
                     }
                 } else {
                     $('.normal_currency').setVisibility(1);
-                    $('.crypto_currency').setVisibility(1);
                     el_crypto_deposit.on('click', ()=>{
                         Accounts.showCurrencyPopUp('switch', 'deposit');
                         return false;

@@ -194,7 +194,7 @@ const Cashier = () => (
 
         <div className='gr-padding-10' />
 
-        <div className='gr-padding-10 table-body crypto_currency' id='payment-agent-section'>
+        <div className='gr-padding-10 table-body payment-agent' id='payment-agent-section'>
             <h3 className='gr-padding-10'>
                 <span>{it.L('Deposit via payment agents')}</span>
             </h3>
