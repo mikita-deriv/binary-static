@@ -185,7 +185,7 @@ const Cashier = () => (
                         <img  className='crypto_icon' src={it.url_for('images/pages/cashier/ethereum-icon.svg')} alt='ethereum-icon_logo' />
                         <img  className='crypto_icon' src={it.url_for('images/pages/cashier/litecoin-icon.svg')} alt='litecoin-icon_logo' />
                         <img  className='crypto_icon' src={it.url_for('images/pages/cashier/usdc-icon.svg')} alt='usdc-icon_logo' />
-                        <img  className='crypto_icon' src={it.url_for('images/pages/cashier/usdt-tether-icon.svg')} alt='usdt-tether_logo' />
+                        <img  src={it.url_for('images/pages/cashier/usdt-tether-icon.svg')} alt='usdt-tether_logo' />
                     </div>
                 </div>
                 <DepositWithdrawButtonCryptocurrencies is_cryptocurrencies_method />

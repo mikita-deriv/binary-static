@@ -318,7 +318,7 @@ const Cashier = (() => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
-                                    ok_text          : localize('Switch to crypto account?'),
+                                    ok_text          : localize('Switch to crypto account'),
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch to crypto account?'),
                                     localized_message: localize('To deposit cryptocurrency, switch your account.'),
@@ -332,7 +332,7 @@ const Cashier = (() => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
-                                    ok_text          : localize('Switch to crypto account?'),
+                                    ok_text          : localize('Switch to crypto account'),
                                     cancel_text      : localize('Cancel'),
                                     localized_title  : localize('Switch account?'),
                                     localized_message: localize('To withdraw cryptocurrency, switch your account.'),
