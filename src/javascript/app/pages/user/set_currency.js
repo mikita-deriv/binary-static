@@ -48,7 +48,7 @@ const SetCurrency = (() => {
                 const is_virtual = Client.get('is_virtual');
                 const has_crypto_account = Client.hasCurrencyType('crypto');
                 let currencies = [];
-                
+
                 if (/multi_account|set_currency/.test(popup_action)) {
                     if (is_virtual || has_crypto_account) {
                         currencies = getVirtualAvailableCurrencies(landing_company, all_fiat);
@@ -56,7 +56,7 @@ const SetCurrency = (() => {
                         currencies = getAvailableCurrencies(landing_company, payout_currencies);
                     }
                 } else if (/switch_account/.test(popup_action)) {
-                    currencies = getCurrentCryptoCurrencies(all_fiat);
+                    currencies = getCurrentCryptoCurrencies(landing_company, all_fiat);
                 } else {
                     currencies = getCurrencyChangeOptions(landing_company);
                 }
@@ -104,16 +104,18 @@ const SetCurrency = (() => {
     const getAvailableCurrencies = (landing_company, payout_currencies) =>
         Client.get('landing_company_shortcode') === 'svg' ? GetCurrency.getCurrencies(landing_company) : payout_currencies;
 
-    const getCurrentCryptoCurrencies = (all_fiat) => {
+    const getCurrentCryptoCurrencies = (landing_company, all_fiat) => {
+        const allowed_currencies = Client.get('is_virtual') ? GetCurrency.getCurrencies(landing_company) : Client.getLandingCompanyValue(Client.get('loginid'), landing_company, 'legal_allowed_currencies');
         const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
         if (!Client.get('is_virtual')){
             current_currencies.push(Client.get('currency'));
         }
+
         if (all_fiat) {
-            return current_currencies;
+            return allowed_currencies.filter(currency =>  current_currencies.includes(currency));
         }
-        return current_currencies.filter(
-            currency => isCryptocurrency(currency)
+        return allowed_currencies.filter(
+            currency => current_currencies.includes(currency) && isCryptocurrency(currency)
         );
         
     };

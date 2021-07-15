@@ -306,6 +306,14 @@
     height: 45px;
 }
 
+.switch-cancel-btn {
+    width: calc(30% - 5px) !important;
+}
+
+.switch-ok-btn {
+    width: calc(70% - 5px) !important;
+}
+
 .charity {
     .gallery {
         position: relative;

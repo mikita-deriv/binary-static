@@ -270,7 +270,9 @@ const Cashier = (() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
                                     ok_text          : localize('Switch account'),
+                                    ok_class         : 'switch-ok-btn',
                                     cancel_text      : localize('Cancel'),
+                                    cancel_class     : 'switch-cancel-btn',
                                     localized_title  : localize('Switch account?'),
                                     localized_message: localize('To deposit money, please switch to your [_1] account', has_fiat_account),
                                     onConfirm        : () =>  Header.switchLoginid(has_fiat_account, 'deposit'),
@@ -285,7 +287,9 @@ const Cashier = (() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
                                     ok_text          : localize('Switch account'),
+                                    ok_class         : 'switch-ok-btn',
                                     cancel_text      : localize('Cancel'),
+                                    cancel_class     : 'switch-cancel-btn',
                                     localized_title  : localize('Switch account?'),
                                     localized_message: localize('To withdraw money, please switch to your [_1] account', has_fiat_account),
                                     onConfirm        : () =>  Header.switchLoginid(has_fiat_account, 'withdrawal'),
@@ -319,7 +323,9 @@ const Cashier = (() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
                                     ok_text          : localize('Switch to crypto account'),
+                                    ok_class         : 'switch-ok-btn',
                                     cancel_text      : localize('Cancel'),
+                                    cancel_class     : 'switch-cancel-btn',
                                     localized_title  : localize('Switch to crypto account?'),
                                     localized_message: localize('To deposit cryptocurrency, switch your account.'),
                                     onConfirm        : () => Accounts.showCurrencyPopUp('switch', 'deposit'),
@@ -333,7 +339,9 @@ const Cashier = (() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
                                     ok_text          : localize('Switch to crypto account'),
+                                    ok_class         : 'switch-ok-btn',
                                     cancel_text      : localize('Cancel'),
+                                    cancel_class     : 'switch-cancel-btn',
                                     localized_title  : localize('Switch account?'),
                                     localized_message: localize('To withdraw cryptocurrency, switch your account.'),
                                     onConfirm        : () => Accounts.showCurrencyPopUp('switch', 'withdrawal'),
