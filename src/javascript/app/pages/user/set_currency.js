@@ -225,14 +225,16 @@ const SetCurrency = (() => {
             } else if (popup_action === 'switch_account') {
                 $('#set_currency_text').text(localize('Choose a cryptocurrency account'));
                 $('#set_currency_text_secondary').text(localize('Choose one of your accounts or add a new cryptocurrency account'));
-            } else {
+            }  else {
                 $('#set_currency_text').text(localize('Please select the currency for this account:'));
             }
-        } else if (fiat_currencies && crypto_currencies) {
-            $('#set_currency_text').text(localize('Choose an account'));
-            $('#set_currency_text_secondary').text(localize('Choose one of your accounts or add a new cryptocurrency account'));
         } else {
-            $('#set_currency_text').text(localize('Do you want this to be a fiat account or crypto account? Please choose one:'));
+            if (popup_action === 'switch_account') {
+                $('#set_currency_text').text(localize('Choose an account'));
+                $('#set_currency_text_secondary').text(localize('Choose one of your accounts or add a new cryptocurrency account'));
+            } else {
+                $('#set_currency_text').text(localize('Do you want this to be a fiat account or crypto account? Please choose one:'));
+            }
         }
 
         $('#set_currency_loading').remove();

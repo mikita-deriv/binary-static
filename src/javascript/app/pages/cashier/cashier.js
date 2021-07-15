@@ -269,9 +269,9 @@ const Cashier = (() => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
-                                    ok_text          : localize('Switch accounts'),
+                                    ok_text          : localize('Switch account'),
                                     cancel_text      : localize('Cancel'),
-                                    localized_title  : localize('Switch accounts?'),
+                                    localized_title  : localize('Switch account?'),
                                     localized_message: localize('To deposit money, please switch to your [_1] account', has_fiat_account),
                                     onConfirm        : () =>  Header.switchLoginid(has_fiat_account, 'deposit'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
@@ -284,9 +284,9 @@ const Cashier = (() => {
                             BinarySocket.send({ authorize: 1 }).then(() => {
                                 Dialog.confirm({
                                     id               : 'deposit_currency_change_popup_container',
-                                    ok_text          : localize('Switch accounts'),
+                                    ok_text          : localize('Switch account'),
                                     cancel_text      : localize('Cancel'),
-                                    localized_title  : localize('Switch accounts?'),
+                                    localized_title  : localize('Switch account?'),
                                     localized_message: localize('To withdraw money, please switch to your [_1] account', has_fiat_account),
                                     onConfirm        : () =>  Header.switchLoginid(has_fiat_account, 'withdrawal'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
@@ -334,7 +334,7 @@ const Cashier = (() => {
                                     id               : 'deposit_currency_change_popup_container',
                                     ok_text          : localize('Switch to crypto account?'),
                                     cancel_text      : localize('Cancel'),
-                                    localized_title  : localize('Switch accounts?'),
+                                    localized_title  : localize('Switch account?'),
                                     localized_message: localize('To withdraw cryptocurrency, switch your account.'),
                                     onConfirm        : () => Accounts.showCurrencyPopUp('switch', 'withdrawal'),
                                     onAbort          : () => BinaryPjax.load(Url.urlFor('cashier')),
