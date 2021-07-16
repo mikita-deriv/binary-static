@@ -105,14 +105,11 @@ const SetCurrency = (() => {
         Client.get('landing_company_shortcode') === 'svg' ? GetCurrency.getCurrencies(landing_company) : payout_currencies;
 
     const getCurrentCryptoCurrencies = (landing_company, all_fiat) => {
-        const allowed_currencies = Client.get('is_virtual') ? GetCurrency.getCurrencies(landing_company) : Client.getLandingCompanyValue(Client.get('loginid'), landing_company, 'legal_allowed_currencies');
+        const allowed_currencies =  Client.getLandingCompanyValue({ real: 1 }, landing_company, 'legal_allowed_currencies');
         const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
-        if (!Client.get('is_virtual')){
-            current_currencies.push(Client.get('currency'));
-        }
-
+        
         if (all_fiat) {
-            return allowed_currencies.filter(currency =>  current_currencies.includes(currency));
+            return allowed_currencies.filter(currency => current_currencies.includes(currency));
         }
         return allowed_currencies.filter(
             currency => current_currencies.includes(currency) && isCryptocurrency(currency)
