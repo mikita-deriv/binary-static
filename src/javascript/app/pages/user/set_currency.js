@@ -182,18 +182,22 @@ const SetCurrency = (() => {
 
         const fiat_currencies = $fiat_currencies.html();
         let crypto_currencies = '';
-
+        const upgrade_info        = Client.getUpgradeInfo();
+        const has_upgrade         = upgrade_info.can_upgrade || upgrade_info.can_open_multi;
+                                    
         if (popup_action === 'switch_account') {
             if (fiat_currencies) {
                 $cryptocurrencies.prepend(fiat_currencies);
             }
 
-            const $add_wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: 'NEW' });
-            const $add_image   = $('<div/>').append($('<img/>',  { src: Url.urlForStatic('images/pages/set_currency/add.svg') }));
-            const $add_name    = $('<div/>', { class: 'currency-name' });
-            $add_name.text(localize('Add new crypto account'));
-            $add_wrapper.append($add_image).append($add_name);
-            $cryptocurrencies.append($add_wrapper);
+            if (has_upgrade){
+                const $add_wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: 'NEW' });
+                const $add_image   = $('<div/>').append($('<img/>',  { src: Url.urlForStatic('images/pages/set_currency/add.svg') }));
+                const $add_name    = $('<div/>', { class: 'currency-name' });
+                $add_name.text(localize('Add new crypto account'));
+                $add_wrapper.append($add_image).append($add_name);
+                $cryptocurrencies.append($add_wrapper);
+            }
 
             crypto_currencies = $cryptocurrencies.html();
             if (crypto_currencies) {
