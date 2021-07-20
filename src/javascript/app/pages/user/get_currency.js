@@ -5,11 +5,9 @@ const GetCurrency = (() => {
     const getCurrenciesOfOtherAccounts = (is_different_company = false) => {
         const all_loginids     = Client.getAllLoginids();
         const other_currencies = [];
-        // console.log(Client.get('landing_company_shortcode'))
         const current_landing_company_shortcode = Client.get('landing_company_shortcode');
-        // console.log(Client.get('loginid'))
-        // console.log(all_loginids)
-        all_loginids.forEach((loginid) => {
+        const real_all_loginids = all_loginids.filter(loginid => !loginid.includes('VRTC'));
+        real_all_loginids.forEach((loginid) => {
             // if it's not current client or under a different landing company, consider the currency
             if (is_different_company) {
                 if (Client.get('loginid') !== loginid) {
