@@ -107,7 +107,6 @@ const SetCurrency = (() => {
     const getCurrentCryptoCurrencies = (landing_company, all_fiat) => {
         const allowed_currencies =  Client.getLandingCompanyValue({ real: 1 }, landing_company, 'legal_allowed_currencies');
         const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
-        
         if (all_fiat) {
             return allowed_currencies.filter(currency => current_currencies.includes(currency));
         }
@@ -397,10 +396,10 @@ const SetCurrency = (() => {
      * Get login id by selected currency
      */
     const getLoginid = (selected_currency) => {
-
         const all_loginids = Client.getAllLoginids();
+        const real_all_loginids = all_loginids.filter(loginid => !loginid.includes('VRTC'));
         let loginid = '';
-        all_loginids.forEach((id) => {
+        real_all_loginids.forEach((id) => {
             if (Client.get('loginid') !== id) {
                 const currency = Client.get('currency', id);
                 if (selected_currency === currency) {
