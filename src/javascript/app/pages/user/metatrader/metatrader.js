@@ -320,7 +320,7 @@ const MetaTrader = (() => {
                             if (actions_info[action].success_msg_selector) {
                                 MetaTraderUI.displayMessage(actions_info[action].success_msg_selector, success_msg, 1);
                             } else {
-                                setTimeout(() => MetaTraderUI.displayMainMessage(success_msg), 1000);
+                                MetaTraderUI.displayMainMessage(success_msg);
                             }
                             MetaTraderUI.enableButton(action, response);
                         }
