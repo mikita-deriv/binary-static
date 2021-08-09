@@ -338,8 +338,17 @@ const MetaTraderUI = (() => {
         $container.find('#account_desc').html($el_to_clone.clone());
     };
 
-    const setCurrentAccount = (acc_type) => {
-        if (Client.get('mt5_account') && Client.get('mt5_account') !== acc_type) return;
+    const setCurrentAccount = async (account_type) => {
+        let acc_type = await account_type;
+        const current_account = await Client.get('mt5_account');
+
+        if (current_account && current_account !== acc_type) return;
+
+        if (current_account === 'real_unknown') {
+            const default_to_other = Object.keys(accounts_info).find(account => getAccountsInfo(account).info);
+            acc_type = default_to_other;
+            $detail.find('.acc-info').setVisibility(1);
+        }
 
         if (current_action_ui !== 'new_account') {
             displayAccountDescription(acc_type);
@@ -362,7 +371,7 @@ const MetaTraderUI = (() => {
                     broker       : () => 'Deriv Limited',
                     display_login: () => (`${info} (${is_demo ? localize('Demo Account') : localize('Real-Money Account')})`),
                     leverage     : () => `1:${info}`,
-                    server       : () => `${server_info && server_info.environment}`,
+                    server       : () => `${server_info === undefined ? 'Unavailable' : server_info && server_info.environment}`,
                     ...(
                         is_synthetic &&
                         server_info.geolocation.region &&
@@ -633,9 +642,6 @@ const MetaTraderUI = (() => {
             $form.find('#view_3').find('#trading_password_new_user').setVisibility(1);
             if (has_mt5_account) {
                 $form.find('#trading_password_input').setVisibility(0);
-                $form.find('#new_user_cancel_button').on('click', () => {
-                    location.reload();
-                });
                 $form.find('#has_mt5_new_user_btn_submit_new_account').setVisibility(1);
             } else {
                 $form.find('#new_user_btn_submit_new_account').setVisibility(1);
@@ -841,7 +847,7 @@ const MetaTraderUI = (() => {
         const num_servers = populateTradingServers('real_gaming_financial');
         if (/real/.test(selected_acc_type) && num_servers.supported === num_servers.used + num_servers.disabled) {
             disableButtonLink('.btn-next');
-            $form.find('.step-2 #rbtn_gaming_financial').addClass('existed disabled');
+            $form.find('.step-2 #rbtn_gaming_financial').addClass('existed');
         }
     };
 
