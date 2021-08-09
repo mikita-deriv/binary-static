@@ -31,7 +31,7 @@ const PaymentAgentTransfer = (() => {
                     const pa_values = response.paymentagent_list.list.filter(
                         (a) => a.paymentagent_loginid === Client.get('loginid')
                     )[0];
-                    init(pa_values, currency, balance);
+                    init(pa_values, currency);
                 });
             } else {
                 setFormVisibility(false);
