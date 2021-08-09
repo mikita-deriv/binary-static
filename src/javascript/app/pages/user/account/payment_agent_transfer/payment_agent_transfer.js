@@ -46,7 +46,7 @@ const PaymentAgentTransfer = (() => {
         });
     };
 
-    const init = (pa, currency, balance) => {
+    const init = (pa, currency) => {
         const form_id = '#frm_paymentagent_transfer';
         $form_error = $('#form_error');
 
@@ -58,15 +58,12 @@ const PaymentAgentTransfer = (() => {
             { request_field: 'paymentagent_transfer', value: 1 },
             { request_field: 'currency',              value: currency },
         ];
-
         FormManager.init(form_id, [
             { selector: '#client_id', validations: ['req', ['regular', { regex: /^\w+\d+$/, message: localize('Please enter a valid Login ID.') }]], request_field: 'transfer_to' },
-            { selector: '#amount',    validations: ['req', ['number', { type: 'float', decimals: getDecimalPlaces(currency), min: pa ? pa.min_withdrawal : 10, max: max_withdrawal(balance, pa, 2000) }], ['custom', { func: () => +Client.get('balance') >= +$('#amount').val(), message: localize('Insufficient balance.') }]] },
+            { selector: '#amount',    validations: ['req', ['number', { type: 'float', decimals: getDecimalPlaces(currency), min: pa ? pa.min_withdrawal : 10, max: max_withdrawal(pa, 2000) }], ['custom', { func: () => +Client.get('balance') >= +$('#amount').val(), message: localize('Insufficient balance.') }]] },
             { selector: '#description', validations: ['general'] },
-
             { request_field: 'dry_run', value: 1 },
         ].concat(common_request_fields));
-
         FormManager.handleSubmit({
             form_selector       : form_id,
             fnc_response_handler: responseHandler,
@@ -74,10 +71,9 @@ const PaymentAgentTransfer = (() => {
         });
     };
 
-    const max_withdrawal = (balance, pa, fixed_max_withdrawal) => {
+    const max_withdrawal = (pa, fixed_max_withdrawal) => {
         const pa_max_withdrawal = pa ? pa.max_withdrawal : fixed_max_withdrawal;
-
-        return balance < pa_max_withdrawal ? balance : pa_max_withdrawal;
+        return pa_max_withdrawal;
     };
 
     const setFormVisibility = (is_visible) => {
