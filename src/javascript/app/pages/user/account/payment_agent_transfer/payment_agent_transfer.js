@@ -74,10 +74,7 @@ const PaymentAgentTransfer = (() => {
         });
     };
 
-    const max_withdrawal = (pa, fixed_max_withdrawal) => {
-        const pa_max_withdrawal = pa ? pa.max_withdrawal : fixed_max_withdrawal;
-        return pa_max_withdrawal;
-    };
+    const max_withdrawal = (pa, fixed_max_withdrawal) => pa ? pa.max_withdrawal : fixed_max_withdrawal;
 
     const setFormVisibility = (is_visible) => {
         if (is_visible) {
