@@ -31,19 +31,37 @@ const SetCurrency = (() => {
 
         const payout_currencies = (await BinarySocket.wait('payout_currencies')).payout_currencies;
         const $currency_list    = $('.currency_list');
-        const $error            = $('#set_currency').find('.error-msg');
+        const $error             = $('#set_currency').find('.error-msg');
+
+        $('#deposit_btn').off('click dblclick').on('click dblclick', () => {
+            if (popup_action) {
+                cleanupPopup();
+            }
+            BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+        });
+        $('#maybe_later_btn').off('click dblclick').on('click dblclick', () => {
+            const url = Client.isAccountOfType('financial') ? Url.urlFor('user/metatrader') : Client.defaultRedirectUrl();
+            BinaryPjax.load(url);
+        });
+
+        $('#deposit_btn').off('click dblclick').on('click dblclick', () => {
+            if (popup_action) {
+                cleanupPopup();
+            }
+            BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`);
+        });
+        $('#maybe_later_btn').off('click dblclick').on('click dblclick', () => {
+            const url = Client.isAccountOfType('financial') ? Url.urlFor('user/metatrader') : Client.defaultRedirectUrl();
+            BinaryPjax.load(url);
+        });
 
         popup_action = localStorage.getItem('popup_action');
         if (Client.get('currency') || popup_action) {
             if (is_new_account) {
                 $('#set_currency_loading').remove();
                 $('#set_currency').setVisibility(1);
-                $('#deposit_btn')
-                    .off('click dblclick')
-                    .on('click dblclick', () => {
-                        BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`);
-                    })
-                    .setVisibility(1);
+                $('#deposit_row').setVisibility(1);
+                $('#congratulations_message').html(localize('You have added a [_1] account.', [Client.get('currency')]));
             } else if (popup_action) {
                 const is_virtual = Client.get('is_virtual');
                 const has_crypto_account = Client.hasCurrencyType('crypto');
@@ -100,9 +118,8 @@ const SetCurrency = (() => {
 
         onSelection($currency_list, $error, true);
     };
-
     const getAvailableCurrencies = (landing_company, payout_currencies) =>
-        Client.get('landing_company_shortcode') === 'svg' ? GetCurrency.getCurrencies(landing_company) : payout_currencies;
+        Client.hasSvgAccount() ? GetCurrency.getCurrencies(landing_company) : payout_currencies;
 
     const getCurrentCryptoCurrencies = (landing_company, all_fiat) => {
         const allowed_currencies =  Client.getLandingCompanyValue({ real: 1 }, landing_company, 'legal_allowed_currencies');
@@ -147,7 +164,7 @@ const SetCurrency = (() => {
         const $fiat_currencies  = $('<div/>');
         const $cryptocurrencies = $('<div/>');
         currencies.forEach((c) => {
-            const $wrapper = $('<div/>', { class: 'gr-2 gr-4-m currency_wrapper', id: c });
+            const $wrapper = $('<div/>', { class: 'gr-2 gr-6-m currency_wrapper', id: c });
             const $image   = $('<div/>').append($('<img/>', { src: Url.urlForStatic(`images/pages/set_currency/${c.toLowerCase()}.svg`) }));
             const $name    = $('<div/>', { class: 'currency-name' });
             if (Currency.isCryptocurrency(c)) {
@@ -374,15 +391,7 @@ const SetCurrency = (() => {
                     } else {
                         Header.populateAccountsList(); // update account title
                         $('.select_currency').setVisibility(0);
-                        $('#deposit_btn')
-                            .off('click dblclick')
-                            .on('click dblclick', () => {
-                                if (popup_action) {
-                                    cleanupPopup();
-                                }
-                                BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`);
-                            })
-                            .setVisibility(1);
+                        $('#deposit_row').setVisibility(1);
                     }
                 }
             });
@@ -420,7 +429,7 @@ const SetCurrency = (() => {
      * @param {boolean} is_btn_enabled // Enable button
      */
     const removeError = ($error, is_btn_enabled) => {
-        if ($error){
+        if ($error) {
             $error.setVisibility(0);
         }
         if ($submit && is_btn_enabled) {
@@ -431,7 +440,7 @@ const SetCurrency = (() => {
     const populateReqMultiAccount = (selected_currency) => {
         const get_settings = State.getResponse('get_settings');
 
-        return ({
+        const request = {
             new_account_real      : 1,
             currency              : selected_currency,
             date_of_birth         : moment.utc(+get_settings.date_of_birth * 1000).format('YYYY-MM-DD'),
@@ -454,7 +463,11 @@ const SetCurrency = (() => {
             ...(get_settings.tax_residence && {
                 tax_residence: get_settings.tax_residence,
             }),
+        };
+        Object.keys(request).forEach(key => {
+            if (!request[key] || request[key] === '') delete request[key];
         });
+        return request;
     };
 
     const cleanupPopup = () => {
