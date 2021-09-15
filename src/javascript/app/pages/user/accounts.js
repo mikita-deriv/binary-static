@@ -179,8 +179,7 @@ const Accounts = (() => {
             form_id           : 'frm_set_currency',
             additionalFunction: async () => {
                 localStorage.setItem('popup_action', action_map[action]);
-                SetCurrency.onLoad(onConfirmSetCurrency, redirect_to, all_fiat);
-                await SetCurrency.onLoad(onConfirmSetCurrency);
+                await SetCurrency.onLoad(onConfirmSetCurrency, redirect_to, all_fiat);
             },
         });
     };
