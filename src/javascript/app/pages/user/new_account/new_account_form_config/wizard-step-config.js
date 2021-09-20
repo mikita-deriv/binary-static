@@ -6,9 +6,11 @@ const termsOfUseConfig = require('./terms-of-use-config');
 
 const shouldShowFinancialDetails = ({ real_account_signup_target }) => real_account_signup_target === 'maltainvest';
 const shouldShowPersonalAndAddressDetailsAndCurrency = ({ real_account_signup_target }) => real_account_signup_target !== 'samoa';
-
+const shouldShowAccountCurrency = localStorage.getItem('SignAccountCurrencyForm');
+localStorage.removeItem('SignAccountCurrencyForm');
 const getSteps = props => [
-    ...(shouldShowPersonalAndAddressDetailsAndCurrency(props) ? [currencySelectorConfig(props)] : []),
+    ...(shouldShowPersonalAndAddressDetailsAndCurrency(props) &&
+    shouldShowAccountCurrency ? [currencySelectorConfig(props)] : []),
     ...(shouldShowPersonalAndAddressDetailsAndCurrency(props) ? [personalDetailsConfig(props)] : []),
     ...(shouldShowPersonalAndAddressDetailsAndCurrency(props) ? [addressDetailsConfig(props)] : []),
     ...(shouldShowFinancialDetails(props) ? [financialDetailsConfig(props)] : []),

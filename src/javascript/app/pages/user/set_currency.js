@@ -43,18 +43,6 @@ const SetCurrency = (() => {
             const url = Client.isAccountOfType('financial') ? Url.urlFor('user/metatrader') : Client.defaultRedirectUrl();
             BinaryPjax.load(url);
         });
-
-        $('#deposit_btn').off('click dblclick').on('click dblclick', () => {
-            if (popup_action) {
-                cleanupPopup();
-            }
-            BinaryPjax.load(`${Url.urlFor('cashier/forwardws')}?action=deposit`);
-        });
-        $('#maybe_later_btn').off('click dblclick').on('click dblclick', () => {
-            const url = Client.isAccountOfType('financial') ? Url.urlFor('user/metatrader') : Client.defaultRedirectUrl();
-            BinaryPjax.load(url);
-        });
-
         popup_action = localStorage.getItem('popup_action');
         if (Client.get('currency') || popup_action) {
             if (is_new_account) {
@@ -326,7 +314,7 @@ const SetCurrency = (() => {
                         cleanupPopup();
                         setIsForNewAccount(true);
                         // ask client to set any missing information
-                        BinaryPjax.load(Url.urlFor('new_account/realws'));
+                        BinaryPjax.load(Url.urlFor('/new_account/real_account'));
                     } else {
                         $error.text(response_c.error.message).setVisibility(1);
                     }

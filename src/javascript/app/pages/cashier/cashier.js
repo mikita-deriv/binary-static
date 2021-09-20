@@ -392,10 +392,12 @@ const Cashier = (() => {
                         
                     } else {
                         el_paymentmethod_deposit.on('click', () => {
-                            el_paymentmethod_deposit.attr('href', Url.urlFor('new_account/realws'));
+                            el_paymentmethod_deposit.attr('href', Url.urlFor('/new_account/real_account'));
+                            localStorage.setItem('SignAccountCurrencyForm', 'showFirstStep');
                         });
                         el_paymentmethod_withdraw.on('click', () => {
-                            el_paymentmethod_withdraw.attr('href', Url.urlFor('new_account/realws'));
+                            el_paymentmethod_withdraw.attr('href', Url.urlFor('/new_account/real_account'));
+                            localStorage.setItem('SignAccountCurrencyForm', 'showFirstStep');
                         });
                     }
                 } else {
