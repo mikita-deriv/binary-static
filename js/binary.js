@@ -16956,10 +16956,10 @@ var Cashier = function () {
                         });
                     } else {
                         el_paymentmethod_deposit.on('click', function () {
-                            el_paymentmethod_deposit.attr('href', Url.urlFor('new_account/realws'));
+                            el_paymentmethod_deposit.attr('href', Url.urlFor('/new_account/real_account'));
                         });
                         el_paymentmethod_withdraw.on('click', function () {
-                            el_paymentmethod_withdraw.attr('href', Url.urlFor('new_account/realws'));
+                            el_paymentmethod_withdraw.attr('href', Url.urlFor('/new_account/real_account'));
                         });
                     }
                 } else {
@@ -33988,11 +33988,10 @@ var Accounts = function () {
                             switch (_context.prev = _context.next) {
                                 case 0:
                                     localStorage.setItem('popup_action', action_map[action]);
-                                    SetCurrency.onLoad(onConfirmSetCurrency, redirect_to, all_fiat);
-                                    _context.next = 4;
-                                    return SetCurrency.onLoad(onConfirmSetCurrency);
+                                    _context.next = 3;
+                                    return SetCurrency.onLoad(onConfirmSetCurrency, redirect_to, all_fiat);
 
-                                case 4:
+                                case 3:
                                 case 'end':
                                     return _context.stop();
                             }
@@ -37730,7 +37729,6 @@ var shouldShowPersonalAndAddressDetailsAndCurrency = function shouldShowPersonal
     var real_account_signup_target = _ref2.real_account_signup_target;
     return real_account_signup_target !== 'samoa';
 };
-
 var getSteps = function getSteps(props) {
     return [].concat(_toConsumableArray(shouldShowPersonalAndAddressDetailsAndCurrency(props) ? [currencySelectorConfig(props)] : []), _toConsumableArray(shouldShowPersonalAndAddressDetailsAndCurrency(props) ? [personalDetailsConfig(props)] : []), _toConsumableArray(shouldShowPersonalAndAddressDetailsAndCurrency(props) ? [addressDetailsConfig(props)] : []), _toConsumableArray(shouldShowFinancialDetails(props) ? [financialDetailsConfig(props)] : []), [termsOfUseConfig(props)]);
 };
@@ -38409,7 +38407,7 @@ var RealAccountOpening = function () {
 
     var onLoad = function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var currency_to_set, residence_list_promise, account_settings_promise, financial_assessment_promise, _ref2, _ref3, residence_list_response, account_settings_response, financial_assessment_response, account_settings, residence_list, financial_assessment, upgrade_info;
+            var currency_to_set, shouldShowAccountCurrency, choosenCurrency, residence_list_promise, account_settings_promise, financial_assessment_promise, _ref2, _ref3, residence_list_response, account_settings_response, financial_assessment_response, account_settings, residence_list, financial_assessment, upgrade_info;
 
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
@@ -38417,24 +38415,28 @@ var RealAccountOpening = function () {
                         case 0:
                             real_account_signup_target = param('account_type');
                             currency_to_set = sessionStorage.getItem('new_financial_account_set_currency');
+                            shouldShowAccountCurrency = localStorage.getItem('SignAccountCurrencyForm');
+                            choosenCurrency = localStorage.getItem('choosenCurrency');
+
+                            console.log('choosenCurrency', choosenCurrency);
 
                             if (!currency_to_set) {
-                                _context.next = 6;
+                                _context.next = 9;
                                 break;
                             }
 
                             AccountOpening.setCurrencyForFinancialAccount(currency_to_set);
-                            _context.next = 35;
+                            _context.next = 42;
                             break;
 
-                        case 6:
+                        case 9:
                             residence_list_promise = BinarySocket.send({ residence_list: 1 });
                             account_settings_promise = BinarySocket.send({ get_settings: 1 });
                             financial_assessment_promise = BinarySocket.send({ get_financial_assessment: 1 });
-                            _context.next = 11;
+                            _context.next = 14;
                             return Promise.all([residence_list_promise, account_settings_promise, financial_assessment_promise]);
 
-                        case 11:
+                        case 14:
                             _ref2 = _context.sent;
                             _ref3 = _slicedToArray(_ref2, 3);
                             residence_list_response = _ref3[0];
@@ -38445,17 +38447,19 @@ var RealAccountOpening = function () {
                             financial_assessment = financial_assessment_response.get_financial_assessment || {};
 
                             if (!AccountOpening.redirectAccount()) {
-                                _context.next = 21;
+                                _context.next = 24;
                                 break;
                             }
 
                             return _context.abrupt('return');
 
-                        case 21:
+                        case 24:
                             upgrade_info = Client.getUpgradeInfo();
 
 
                             account_details = { residence: account_settings.country_code };
+                            account_details = { currency: choosenCurrency };
+                            console.log('account_details', account_details);
                             Object.assign(account_details, real_account_signup_target === 'maltainvest' ? { new_account_maltainvest: 1, accept_risk: 0 } : { new_account_real: 1 });
 
                             action_previous_buttons = document.getElementsByClassName('action_previous');
@@ -38472,6 +38476,9 @@ var RealAccountOpening = function () {
                                 financial_assessment: financial_assessment
                             });
                             current_step = 0;
+                            if (shouldShowAccountCurrency) current_step = 1;
+                            localStorage.removeItem('SignAccountCurrencyForm');
+
                             steps.forEach(function (step) {
                                 step.body_module.init(step.fields, real_account_signup_target);
                             });
@@ -38482,7 +38489,7 @@ var RealAccountOpening = function () {
                             getElementById('account_opening_steps').setVisibility(1);
                             renderStep();
 
-                        case 35:
+                        case 42:
                         case 'end':
                             return _context.stop();
                     }
@@ -38510,7 +38517,6 @@ var RealAccountOpening = function () {
         });
         $.scrollTo(0, 500);
     };
-
     var onRiskAccept = function onRiskAccept(e) {
         e.preventDefault();
         Object.assign(account_details, { accept_risk: 1 });
@@ -39520,27 +39526,15 @@ var SetCurrency = function () {
                                 var url = Client.isAccountOfType('financial') ? Url.urlFor('user/metatrader') : Client.defaultRedirectUrl();
                                 BinaryPjax.load(url);
                             });
-
-                            $('#deposit_btn').off('click dblclick').on('click dblclick', function () {
-                                if (popup_action) {
-                                    cleanupPopup();
-                                }
-                                BinaryPjax.load(Url.urlFor('cashier/forwardws') + '?action=deposit');
-                            });
-                            $('#maybe_later_btn').off('click dblclick').on('click dblclick', function () {
-                                var url = Client.isAccountOfType('financial') ? Url.urlFor('user/metatrader') : Client.defaultRedirectUrl();
-                                BinaryPjax.load(url);
-                            });
-
                             popup_action = localStorage.getItem('popup_action');
 
                             if (!(Client.get('currency') || popup_action)) {
-                                _context.next = 47;
+                                _context.next = 45;
                                 break;
                             }
 
                             if (!is_new_account) {
-                                _context.next = 28;
+                                _context.next = 26;
                                 break;
                             }
 
@@ -39548,12 +39542,12 @@ var SetCurrency = function () {
                             $('#set_currency').setVisibility(1);
                             $('#deposit_row').setVisibility(1);
                             $('#congratulations_message').html(localize('You have added a [_1] account.', [Client.get('currency')]));
-                            _context.next = 46;
+                            _context.next = 44;
                             break;
 
-                        case 28:
+                        case 26:
                             if (!popup_action) {
-                                _context.next = 45;
+                                _context.next = 43;
                                 break;
                             }
 
@@ -39577,13 +39571,13 @@ var SetCurrency = function () {
                             $('#hide_new_account').setVisibility(0);
 
                             if (!(currencies.length === 0)) {
-                                _context.next = 36;
+                                _context.next = 34;
                                 break;
                             }
 
                             return _context.abrupt('return');
 
-                        case 36:
+                        case 34:
 
                             $('.show_' + popup_action).setVisibility(1);
                             populateCurrencies(currencies);
@@ -39605,22 +39599,22 @@ var SetCurrency = function () {
                                 }
                                 $submit.addClass('button-disabled');
                             }).find('span').text(action_map[popup_action]);
-                            _context.next = 46;
+                            _context.next = 44;
                             break;
 
-                        case 45:
+                        case 43:
                             BinaryPjax.loadPreviousUrl();
 
-                        case 46:
+                        case 44:
                             return _context.abrupt('return');
 
-                        case 47:
+                        case 45:
 
                             populateCurrencies(getAvailableCurrencies(landing_company, payout_currencies));
 
                             onSelection($currency_list, $error, true);
 
-                        case 49:
+                        case 47:
                         case 'end':
                             return _context.stop();
                     }
@@ -39744,10 +39738,6 @@ var SetCurrency = function () {
         }
 
         var has_one_group = !fiat_currencies && crypto_currencies || fiat_currencies && !crypto_currencies;
-        console.log('has_one_group', has_one_group);
-        console.log('popup_action', popup_action);
-        console.log('fiat_currencies', fiat_currencies);
-        console.log('crypto_currencies', crypto_currencies);
         if (has_one_group) {
             if (popup_action === 'multi_account') {
                 if (!fiat_currencies && crypto_currencies) {
@@ -39847,7 +39837,9 @@ var SetCurrency = function () {
                         cleanupPopup();
                         setIsForNewAccount(true);
                         // ask client to set any missing information
-                        BinaryPjax.load(Url.urlFor('new_account/realws'));
+                        BinaryPjax.load(Url.urlFor('/new_account/real_account'));
+                        localStorage.setItem('choosenCurrency', request.currency);
+                        localStorage.setItem('SignAccountCurrencyForm', 'showFirstStep');
                     } else {
                         $error.text(response_c.error.message).setVisibility(1);
                     }
