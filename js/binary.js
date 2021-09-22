@@ -38418,25 +38418,23 @@ var RealAccountOpening = function () {
                             shouldShowAccountCurrency = localStorage.getItem('SignAccountCurrencyForm');
                             choosenCurrency = localStorage.getItem('choosenCurrency');
 
-                            console.log('choosenCurrency', choosenCurrency);
-
                             if (!currency_to_set) {
-                                _context.next = 9;
+                                _context.next = 8;
                                 break;
                             }
 
                             AccountOpening.setCurrencyForFinancialAccount(currency_to_set);
-                            _context.next = 42;
+                            _context.next = 41;
                             break;
 
-                        case 9:
+                        case 8:
                             residence_list_promise = BinarySocket.send({ residence_list: 1 });
                             account_settings_promise = BinarySocket.send({ get_settings: 1 });
                             financial_assessment_promise = BinarySocket.send({ get_financial_assessment: 1 });
-                            _context.next = 14;
+                            _context.next = 13;
                             return Promise.all([residence_list_promise, account_settings_promise, financial_assessment_promise]);
 
-                        case 14:
+                        case 13:
                             _ref2 = _context.sent;
                             _ref3 = _slicedToArray(_ref2, 3);
                             residence_list_response = _ref3[0];
@@ -38447,19 +38445,18 @@ var RealAccountOpening = function () {
                             financial_assessment = financial_assessment_response.get_financial_assessment || {};
 
                             if (!AccountOpening.redirectAccount()) {
-                                _context.next = 24;
+                                _context.next = 23;
                                 break;
                             }
 
                             return _context.abrupt('return');
 
-                        case 24:
+                        case 23:
                             upgrade_info = Client.getUpgradeInfo();
 
 
                             account_details = { residence: account_settings.country_code };
                             account_details = { currency: choosenCurrency };
-                            console.log('account_details', account_details);
                             Object.assign(account_details, real_account_signup_target === 'maltainvest' ? { new_account_maltainvest: 1, accept_risk: 0 } : { new_account_real: 1 });
 
                             action_previous_buttons = document.getElementsByClassName('action_previous');
@@ -38478,7 +38475,7 @@ var RealAccountOpening = function () {
                             current_step = 0;
                             if (shouldShowAccountCurrency) current_step = 1;
                             localStorage.removeItem('SignAccountCurrencyForm');
-
+                            localStorage.removeItem('choosenCurrency');
                             steps.forEach(function (step) {
                                 step.body_module.init(step.fields, real_account_signup_target);
                             });
@@ -38489,7 +38486,7 @@ var RealAccountOpening = function () {
                             getElementById('account_opening_steps').setVisibility(1);
                             renderStep();
 
-                        case 42:
+                        case 41:
                         case 'end':
                             return _context.stop();
                     }
