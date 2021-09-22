@@ -315,6 +315,7 @@ const SetCurrency = (() => {
                         setIsForNewAccount(true);
                         // ask client to set any missing information
                         BinaryPjax.load(Url.urlFor('/new_account/real_account'));
+                        localStorage.setItem('choosenCurrency', request.currency);
                         localStorage.setItem('SignAccountCurrencyForm', 'showFirstStep');
                     } else {
                         $error.text(response_c.error.message).setVisibility(1);

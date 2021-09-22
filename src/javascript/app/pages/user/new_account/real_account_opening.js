@@ -19,6 +19,7 @@ const RealAccountOpening = (() => {
         real_account_signup_target = param('account_type');
         const currency_to_set = sessionStorage.getItem('new_financial_account_set_currency');
         const shouldShowAccountCurrency = localStorage.getItem('SignAccountCurrencyForm');
+        const choosenCurrency = localStorage.getItem('choosenCurrency');
         if (currency_to_set) AccountOpening.setCurrencyForFinancialAccount(currency_to_set);
         else {
             const residence_list_promise = BinarySocket.send({ residence_list: 1 });
@@ -33,6 +34,7 @@ const RealAccountOpening = (() => {
             const upgrade_info = Client.getUpgradeInfo();
 
             account_details = { residence: account_settings.country_code };
+            account_details = { currency: choosenCurrency };
             Object.assign(account_details,
                 real_account_signup_target === 'maltainvest'
                     ? { new_account_maltainvest: 1, accept_risk: 0 }
@@ -53,7 +55,7 @@ const RealAccountOpening = (() => {
             current_step = 0;
             if (shouldShowAccountCurrency) current_step = 1;
             localStorage.removeItem('SignAccountCurrencyForm');
-            
+            localStorage.removeItem('choosenCurrency');
             steps.forEach(step => { step.body_module.init(step.fields, real_account_signup_target); });
 
             setPageTitle();
