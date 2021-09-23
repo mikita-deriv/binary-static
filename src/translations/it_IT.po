@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: binary-static\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-09-15 03:38\n"
+"PO-Revision-Date: 2021-09-22 06:37\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,6 @@ msgstr "1"
 
 msgid "2"
 msgstr "2"
-
-msgid "5"
-msgstr "5"
 
 msgid "20"
 msgstr "20"
@@ -507,9 +504,6 @@ msgstr "Premio come 'Migliore società di probabilità fisse del 2012' da parte 
 
 msgid "'Financial Trading Operator of the Year' award by eGaming Review"
 msgstr "Premio \"Financial Trading Operator of the year\" di eGaming Review"
-
-msgid "(1 standard forex lot is 100k units)"
-msgstr "(1 lotto Forex standard corrisponde a 100 mila unità)"
 
 msgid "(1 standard lot is 100k units)"
 msgstr "(1 lotto standard corrisponde a 100 mila unità)"
@@ -4844,7 +4838,7 @@ msgid "Expertise in the application of object-oriented programming languages (C+
 msgstr "Competenze nell'applicazione dei linguaggi di programmazione orientati all'oggetto (C++, Perl e Java) abbinati alla capacità di produrre codici di alta qualità"
 
 msgid "Expiry date"
-msgstr "Data di scadenza"
+msgstr "Scadenza"
 
 msgid "Expiry date is required for %1."
 msgstr "La data di scadenza è necessaria per %1."
@@ -5191,8 +5185,8 @@ msgstr "Per le quotazioni Forex, gli orari di chiusura indicati dalla Società s
 msgid "For forex, a deal for 1 lot of EUR/USD will pay out EUR 2.5 in commission based on the following formula:"
 msgstr "Per il Forex, 1 lotto di EUR/USD rende 2,5 EUR in commissioni sulla base della formula seguente:"
 
-msgid "For forex, a deal for 1 lot of EUR/USD will pay out EUR 5 in commission based on the following formula:"
-msgstr "Per il Forex, 1 lotto di EUR/USD rende 5 EUR in commissioni sulla base della formula seguente:"
+msgid "For forex, a deal for 1 lot will pay out USD 2 in commission based on the following formula (using EUR/USD as an example):"
+msgstr ""
 
 msgid "For forex, your commission is represented in the base currency (EUR in the above example)."
 msgstr "Per il Forex, la commissione è nella valuta di base (EUR nell'esempio sopra)."
@@ -5792,7 +5786,7 @@ msgid "I acknowledge that I am not a politically exposed person (PEP)."
 msgstr "Dichiaro di non essere una persona politicamente esposta (PEP)."
 
 msgid "I agree to the %1terms and conditions%2."
-msgstr ""
+msgstr "Accetto i %1termini e le condizioni%2."
 
 msgid "I am not a PEP, and I have not been a PEP in the last 12 months."
 msgstr "Non sono un soggetto PEP e non lo sono stato negli ultimi 12 mesi."
@@ -5846,7 +5840,7 @@ msgid "IB programme FAQ"
 msgstr "Programma IB FAQ"
 
 msgid "ID number"
-msgstr "Numero identificativo"
+msgstr "Numero"
 
 msgid "ID number is required for %1."
 msgstr "È necessario un numero identificativo per %1."
@@ -13471,6 +13465,12 @@ msgstr "1 USD"
 msgid "USD 10"
 msgstr "10 USD"
 
+msgid "USD 2"
+msgstr ""
+
+msgid "USD 4"
+msgstr ""
+
 msgid "USD Coin"
 msgstr "USD Coin"
 
@@ -14675,7 +14675,7 @@ msgid "You have funds in these MT5 accounts:"
 msgstr "Hai fondi in questi conti MT5:"
 
 msgid "You have insufficient funds in your Binary account, please <a class=\"insufficient-funds-error-link\" href=\"%1\">add funds</a>."
-msgstr ""
+msgstr "Non hai fondi sufficienti nel tuo account Binary, ti chiediamo di <a class=\"insufficient-funds-error-link\" href=\"%1\">aggiungere fondi</a>."
 
 msgid "You have insufficient funds in your MT5 account."
 msgstr "Non hai fondi sufficienti sul conto MT5."
