@@ -34,7 +34,6 @@ const RealAccountOpening = (() => {
             const upgrade_info = Client.getUpgradeInfo();
 
             account_details = { residence: account_settings.country_code };
-            account_details = { currency: choosenCurrency };
             Object.assign(account_details,
                 real_account_signup_target === 'maltainvest'
                     ? { new_account_maltainvest: 1, accept_risk: 0 }
@@ -53,7 +52,11 @@ const RealAccountOpening = (() => {
                 financial_assessment,
             });
             current_step = 0;
-            if (shouldShowAccountCurrency) current_step = 1;
+
+            if (shouldShowAccountCurrency) {
+                current_step = 1;
+                Object.assign(account_details, { currency: choosenCurrency });
+            }
             localStorage.removeItem('SignAccountCurrencyForm');
             localStorage.removeItem('choosenCurrency');
             steps.forEach(step => { step.body_module.init(step.fields, real_account_signup_target); });
