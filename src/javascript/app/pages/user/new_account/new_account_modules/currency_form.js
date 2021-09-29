@@ -27,10 +27,10 @@ const SetCurrency = (() => {
         'USDK',
     ];
 
-    const init = async (field, real_account_signup_target) => {
+    const init = async (fields, real_account_signup_target) => {
         $currency_list = $('.currency_list');
         $error = $('#set_currency').find('.error-msg');
-        const default_value = field[0].default_value;
+        const default_value = fields[0].default_value;
         const landing_company = (await BinarySocket.wait('landing_company')).landing_company;
         populateCurrencies(getAvailableCurrencies(landing_company, real_account_signup_target));
         onSelection(true);

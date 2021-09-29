@@ -112,6 +112,7 @@ const SetCurrency = (() => {
     const getCurrentCryptoCurrencies = (landing_company, all_fiat) => {
         const allowed_currencies =  Client.getLandingCompanyValue({ real: 1 }, landing_company, 'legal_allowed_currencies');
         const current_currencies = GetCurrency.getCurrenciesOfOtherAccounts(true);
+        current_currencies.push(Client.get('currency'));
         if (all_fiat) {
             return allowed_currencies.filter(currency => current_currencies.includes(currency));
         }
